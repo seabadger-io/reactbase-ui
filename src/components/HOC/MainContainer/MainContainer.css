@@ -1,0 +1,7 @@
+.MainContainer {
+  flex-grow: 1;
+  margin: 15px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
