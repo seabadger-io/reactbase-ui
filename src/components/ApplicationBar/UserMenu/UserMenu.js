@@ -66,7 +66,7 @@ class UserMenu extends Component {
         MenuListProps={{ disablePadding: true }}
       >
       {
-        menuItems.map(([pathOrHandler, title, icon]) => {
+        menuItems.map(([pathOrHandler, title]) => {
           let clickHandler;
           if (typeof pathOrHandler === 'function') {
             clickHandler = pathOrHandler;
@@ -75,7 +75,6 @@ class UserMenu extends Component {
           }
           return (
             <MenuItem key={uuid()} onClick={clickHandler}>
-              {icon ? icon : null}
               {title}
             </MenuItem>
           );
@@ -136,4 +135,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
+export { UserMenu as DisconnectedUserMenu };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserMenu));
