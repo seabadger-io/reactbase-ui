@@ -21,4 +21,5 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+export { authRedirect as DisconnectedAuthRedirect };
 export default connect(mapStateToProps, mapDispatchToProps)(authRedirect);
