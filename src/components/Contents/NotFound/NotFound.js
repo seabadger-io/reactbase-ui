@@ -47,4 +47,5 @@ const notFound = (props) => {
   );
 };
 
+export { notFound as DisconnectedNotFound };
 export default withRouter(notFound);
