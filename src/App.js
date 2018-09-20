@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { auth, db } from './firebase';
 import * as actions from './redux/actions';
+import * as routes from './components/ContentRouter/routes';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -13,15 +14,24 @@ import ContentRouter from './components/ContentRouter/ContentRouter';
 import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 
 class App extends Component {
-  componentDidMount() {
+  userMetaUnsubscribe = null;
+
+  componentWillMount() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.props.authSuccess(user);
-        db.collection('users').doc(user.uid)
+        this.userMetaUnsubscribe = db.collection('users').doc(user.uid)
           .onSnapshot((userMeta) => {
             this.props.userMetaUpdated(userMeta.data());
+            if (userMeta.data().isSuspended &&
+            this.props.location.pathName !== routes.ACCOUNT_SUSPENDED) {
+              this.props.history.replace(routes.ACCOUNT_SUSPENDED);
+            }
           });
       } else {
+        if (typeof this.userMetaUnsubscribe === 'function') {
+          this.userMetaUnsubscribe();
+        }
         this.props.logout();
       }
     });
@@ -47,15 +57,15 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    authContinueUrl: state.auth.continueUrl
+    authContinueUrl: state.auth.continueUrl,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     authSuccess: (user) => dispatch(actions.authSuccess(user)),
-    userMetaUpdated: (userMeta) => dispatch(actions.userMetaUpdated(userMeta)),
     logout: () => dispatch(actions.logout()),
+    userMetaUpdated: (userMeta) => dispatch(actions.userMetaUpdated(userMeta)),
   };
 };
 

@@ -19,11 +19,11 @@ const notFound = (props) => {
     textBlock: {
       margin: '15px 0'
     },
-  }
+  };
 
   const go = (path) => {
     props.history.push(path);
-  }
+  };
 
   return (
     <Paper style={styles.paper}>
