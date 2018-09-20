@@ -27,4 +27,11 @@ describe('auth actions', () => {
     expect(response).toHaveProperty('type', actionTypes.AUTH_SET_CONTINUE_URL);
     expect(response).toHaveProperty('continueUrl', url);
   });
+
+  it('should return expected properties on user meta update', () => {
+    const userMeta = 'usermeta';
+    const response = authActions.userMetaUpdated(userMeta);
+    expect(response).toHaveProperty('type', actionTypes.AUTH_UPD_USERMETA);
+    expect(response).toHaveProperty('userMeta', userMeta);
+  });
 });

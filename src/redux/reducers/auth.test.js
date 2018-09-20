@@ -44,10 +44,11 @@ describe('auth reducer', () => {
     });
   });
 
-  it('should reset user to null on failed login', () => {
+  it('should reset user and userMeta to null on failed login', () => {
     const startState = {
       ...initialState,
-      user: 'notnull'
+      user: 'notnull',
+      userMeta: 'notnull',
     };
     const payload = { error: {} };
     const state = authReducer(startState, {
@@ -55,13 +56,15 @@ describe('auth reducer', () => {
       ...payload,
     });
     expect(state.user).toEqual(null);
+    expect(state.userMeta).toEqual(null);
   });
 
-  it('should set user and error to null on logout', () => {
+  it('should set user, userMeta and error to null on logout', () => {
     const startState = {
       ...initialState,
       user: 'notnull',
       error: 'notnull',
+      userMeta: 'notnull',
     };
     const state = authReducer(startState, {
       type: actionTypes.AUTH_LOGOUT
@@ -70,6 +73,7 @@ describe('auth reducer', () => {
       ...initialState,
       user: null,
       error: null,
+      userMeta: null,
     });
   });
 
@@ -77,6 +81,17 @@ describe('auth reducer', () => {
     const payload = { continueUrl: 'url' };
     expect(authReducer(undefined, {
       type: actionTypes.AUTH_SET_CONTINUE_URL,
+      ...payload,
+    })).toEqual({
+      ...initialState,
+      ...payload,
+    });
+  });
+
+  it('should set user meta on userMetaUpdated', () => {
+    const payload = { userMeta: 'usermeta' };
+    expect(authReducer(undefined, {
+      type: actionTypes.AUTH_UPD_USERMETA,
       ...payload,
     })).toEqual({
       ...initialState,

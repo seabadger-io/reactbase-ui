@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import * as actions from './redux/actions';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,6 +17,10 @@ class App extends Component {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.props.authSuccess(user);
+        db.collection('users').doc(user.uid)
+          .onSnapshot((userMeta) => {
+            this.props.userMetaUpdated(userMeta.data());
+          });
       } else {
         this.props.logout();
       }
@@ -50,6 +54,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     authSuccess: (user) => dispatch(actions.authSuccess(user)),
+    userMetaUpdated: (userMeta) => dispatch(actions.userMetaUpdated(userMeta)),
     logout: () => dispatch(actions.logout()),
   };
 };
