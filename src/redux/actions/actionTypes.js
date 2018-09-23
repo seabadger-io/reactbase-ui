@@ -3,3 +3,5 @@ export const AUTH_FAIL = 'AUTH_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const AUTH_SET_CONTINUE_URL = 'AUTH_SET_CONTINUE_URL';
 export const AUTH_UPD_USERMETA = 'AUTH_UPD_USERMETA';
+
+export const PROFILE_UPDATED = 'PROFILE_UPDATED';

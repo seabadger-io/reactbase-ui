@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { auth, db } from './firebase';
-import * as actions from './redux/actions';
+import * as userinfoMonitor from './firebase/userinfoMonitor';
 import * as routes from './components/ContentRouter/routes';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,26 +14,23 @@ import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 
 class App extends Component {
   userMetaUnsubscribe = null;
+  profileUnsubscribe = null;
 
   componentWillMount() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.props.authSuccess(user);
-        this.userMetaUnsubscribe = db.collection('users').doc(user.uid)
-          .onSnapshot((userMeta) => {
-            this.props.userMetaUpdated(userMeta.data());
-            if (userMeta.data().isSuspended &&
-            this.props.location.pathName !== routes.ACCOUNT_SUSPENDED) {
-              this.props.history.replace(routes.ACCOUNT_SUSPENDED);
-            }
-          });
-      } else {
-        if (typeof this.userMetaUnsubscribe === 'function') {
-          this.userMetaUnsubscribe();
-        }
-        this.props.logout();
-      }
-    });
+    this.props.startUserinfoMonitor();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userMeta &&
+    nextProps.userMeta.isSuspended &&
+    this.props.location.pathName !== routes.ACCOUNT_SUSPENDED) {
+      this.props.history.replace(routes.ACCOUNT_SUSPENDED);
+    }
+    if (nextProps.profile &&
+    !nextProps.profile.username &&
+    this.props.location.pathName !== routes.MYPROFILE) {
+      this.props.history.replace(routes.MYPROFILE);
+    }
   }
 
   render() {
@@ -58,14 +54,14 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     authContinueUrl: state.auth.continueUrl,
+    userMeta: state.auth.userMeta,
+    profile: state.profile,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authSuccess: (user) => dispatch(actions.authSuccess(user)),
-    logout: () => dispatch(actions.logout()),
-    userMetaUpdated: (userMeta) => dispatch(actions.userMetaUpdated(userMeta)),
+    startUserinfoMonitor: () => userinfoMonitor.start(dispatch),
   };
 };
 
