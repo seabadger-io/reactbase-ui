@@ -23,12 +23,12 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userMeta &&
     nextProps.userMeta.isSuspended &&
-    this.props.location.pathName !== routes.ACCOUNT_SUSPENDED) {
+    this.props.location.pathname !== routes.ACCOUNT_SUSPENDED) {
       this.props.history.replace(routes.ACCOUNT_SUSPENDED);
     }
     if (nextProps.profile &&
     !nextProps.profile.username &&
-    this.props.location.pathName !== routes.MYPROFILE) {
+    this.props.location.pathname !== routes.MYPROFILE) {
       this.props.history.replace(routes.MYPROFILE);
     }
   }
