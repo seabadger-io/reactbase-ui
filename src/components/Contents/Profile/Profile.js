@@ -6,6 +6,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import Zoom from '@material-ui/core/Zoom';
 
 
 class Profile extends Component {
@@ -30,7 +33,7 @@ class Profile extends Component {
             You are almost ready. Please complete the mandatory (*) fields in your profile.
           </Typography>) : null
         }
-        <Grid container spacing={12}>
+        <Grid container spacing={16}>
           <Grid item xs={12} sm={4}>
             {/* profile photo */}
             <div style={{ backgroundColor: 'black', width: '160px', height: '200px' }}></div>
@@ -68,13 +71,24 @@ class Profile extends Component {
             />
           </Grid>
         </Grid>
-        <Button
-          color="primary"
-          variant="contained"
-          style={{ position: 'fixed', top: '30px', right: '30px', zIndex: 2000 }}
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open
         >
-          Save changes
-        </Button>
+          <SnackbarContent
+            message="There are unsaved changes"
+            action={[
+              <Zoom in timeout={500} key="save-button">
+                <Button
+                  color="primary"
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              </Zoom>
+            ]}
+          />
+        </Snackbar>
       </Paper>
     );
   }
