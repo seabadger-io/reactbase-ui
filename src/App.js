@@ -20,16 +20,16 @@ class App extends Component {
     this.props.startUserinfoMonitor();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.userMeta &&
-    nextProps.userMeta.isSuspended &&
+  componentDidUpdate() {
+    if (this.props.userMeta &&
+    this.props.userMeta.isSuspended &&
     this.props.location.pathname !== routes.ACCOUNT_SUSPENDED) {
-      this.props.history.replace(routes.ACCOUNT_SUSPENDED);
+      this.props.history.push(routes.ACCOUNT_SUSPENDED);
     }
-    if (nextProps.profile &&
-    !nextProps.profile.username &&
+    if (this.props.profile &&
+    !this.props.profile.username &&
     this.props.location.pathname !== routes.MYPROFILE) {
-      this.props.history.replace(routes.MYPROFILE);
+      this.props.history.push(routes.MYPROFILE);
     }
   }
 
