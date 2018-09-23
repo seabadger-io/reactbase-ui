@@ -8,6 +8,7 @@ import AuthLogout from '../Contents/Auth/Logout/Logout';
 import AuthRedirect from '../Contents/Auth/AuthRedirect/AuthRedirect';
 import NotFound from '../Contents/NotFound/NotFound';
 import AccountSuspended from '../Contents/AccountSuspended/AccountSuspended';
+import Profile from '../Contents/Profile/Profile';
 
 const contentRouter = () => {
   return (
@@ -16,6 +17,7 @@ const contentRouter = () => {
       <Route path={routes.AUTH_LOGIN} exact component={AuthLogin} />
       <Route path={routes.AUTH_LOGOUT} exact component={AuthLogout} />
       <Route path={routes.AUTH_REDIRECT} exact component={AuthRedirect} />
+      <Route path={routes.MYPROFILE} exact component={Profile} />
       <Route path={routes.ACCOUNT_SUSPENDED} exact component={AccountSuspended} />
       <Route component={NotFound} />
     </Switch>
