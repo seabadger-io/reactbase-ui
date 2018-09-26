@@ -1,17 +1,45 @@
-import red from '@material-ui/core/colors/red';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import red from '@material-ui/core/colors/red';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Zoom from '@material-ui/core/Zoom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 
 
 class Profile extends Component {
+  state = {
+    activeHelper: null,
+    formValues: null,
+    formChanged: false,
+    formErrors: {},
+  }
+
+  formValidations = {
+    username: {
+      required: true,
+      minLength: 4,
+      maxLength: 24,
+    },
+    contactEmail: {
+      required: true,
+      maxLength: 256,
+      // http://jsfiddle.net/ghvj4gy9/embedded/result,js/
+      matches: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    },
+    about: {
+      maxLength: 2048,
+    },
+    location: {
+      maxLength: 256,
+    }
+  }
+
   styles = {
     main: {
       flexGrow: 1,
@@ -20,7 +48,65 @@ class Profile extends Component {
       justifyContent: 'center',
       height: 'fit-content'
     },
-  };
+  }
+
+  componentWillMount() {
+    this.setState({ formValues: { ...this.props.profile }});
+  }
+
+  hiddenHelperText = (itemId, helperText) => {
+    return {
+      helperText: this.state.activeHelper === itemId ? helperText : null,
+      inputProps: {
+        onFocus: () => this.setState({ activeHelper: itemId }),
+        onBlur: () => this.setState({ activeHelper: null }),
+      }
+    }
+  }
+
+  texfieldChangeHandler = (e) => {
+    const formValues = { ...this.state.formValues };
+    const formErrors = { ...this.state.formErrors };
+    const name = e.target.name;
+    const value = e.target.value;
+    formValues[name] = value;
+    if (typeof this.formValidations[name] === 'object') {
+      formErrors[name] = !inputIsValid(value,
+        this.formValidations[name]);
+    } else {
+      formErrors[name] = false;
+    }
+    this.setState({
+      formValues: formValues,
+      formErrors: formErrors,
+      formChanged: true,
+    });
+    e.preventDefault();
+  }
+
+  validateForm(cb = () => {}) {
+    const formErrors = { ...this.state.formErrors };
+    for (const field of Object.keys(this.formValidations)) {
+      formErrors[field] = !inputIsValid(this.state.formValues[field],
+        this.formValidations[field]);
+    }
+    this.setState({ formErrors: formErrors }, cb);
+  }
+
+  formHasErrors() {
+    return Object.keys(this.state.formErrors) // check all error fields
+      .map((k) => this.state.formErrors[k]) // map key to value
+      .reduce((acc, cur) => acc || cur, false); // reduce values so it's true is any of them true
+  }
+
+  submitHandler = (e) => {
+    this.validateForm(() => {      
+      if (!this.formHasErrors()) {
+        this.setState({ formChanged: false });
+      }
+    });
+    e.preventDefault();
+  }
 
   render() {
     return (
@@ -33,47 +119,92 @@ class Profile extends Component {
             You are almost ready. Please complete the mandatory (*) fields in your profile.
           </Typography>) : null
         }
-        <Grid container spacing={16}>
-          <Grid item xs={12} sm={4}>
+        { /* container form */ }
+        <Grid
+          container
+          spacing={16}
+          component="form"
+          onSubmit={this.submitHandler}
+          noValidate
+        >
+          <Grid item container xs={12} sm={4} justify="center">
             {/* profile photo */}
             <div style={{ backgroundColor: 'black', width: '160px', height: '200px' }}></div>
           </Grid>
-          <Grid item container xs={12} sm={8}>
+          <Grid item container xs={12} sm={8} justify="center">
             {/* user details  */}
-            <TextField
-              id="username-input"
-              label="Username"
-              placeholder="Username"
-              helperText="Minimum 4, maximum 24 characters. Only letters, numbers, hyphen and underscore"
-              fullWidth
-              required
-            />
-            <TextField
-              id="contactemail-input"
-              label="Contact email"
-              placeholder="Contact email"
-              fullWidth
-              required
-            />
-            <TextField
-              id="location-input"
-              label="Location"
-              placeholder="Location"
-              helperText="If you provide us your location, your potential customers can find you more easily"
-              fullWidth
-            />
-            <TextField
-              id="about-input"
-              label="About"
-              placeholder="Say something about yourself"
-              fullWidth
-              multiline
-            />
+              <TextField
+                id="username-input"
+                name="username"
+                label="Username"
+                placeholder="Username"
+                value={this.state.formValues.username || ''}
+                onChange={this.texfieldChangeHandler}
+                error={this.state.formErrors.username || false}
+                fullWidth
+                {...this.hiddenHelperText(
+                  'username-input',
+                  'Minimum 4, maximum 24 characters. Only letters, numbers, hyphen and underscore'
+                )}
+              />
+              <TextField
+                id="contactemail-input"
+                name="contactEmail"
+                label="Contact email"
+                placeholder="Contact email"
+                value={this.state.formValues.contactEmail || ''}
+                onChange={this.texfieldChangeHandler}
+                type="email"
+                fullWidth
+                {...this.hiddenHelperText(
+                  'username-input',
+                  'Must be a valid email address, maximum 256 characters long'
+                )}
+                error={this.state.formErrors.contactEmail || false}
+              />
+              <TextField
+                id="location-input"
+                name="location"
+                label="Location"
+                placeholder="Location"
+                value={this.state.formValues.location || ''}
+                onChange={this.texfieldChangeHandler}
+                fullWidth
+                {...this.hiddenHelperText(
+                  'location-input',
+                  'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
+                )}
+                error={this.state.formErrors.location || false}
+              />
+              <TextField
+                id="about-input"
+                name="about"
+                label="About"
+                placeholder="About"
+                value={this.state.formValues.about || ''}
+                onChange={this.texfieldChangeHandler}
+                fullWidth
+                multiline
+                {...this.hiddenHelperText(
+                  'about-input',
+                  'Must be maximum 2048 characters long'
+                )}
+                error={this.state.formErrors.about}
+              />
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                style={{ margin: '5px' }}
+                disabled={!this.state.formChanged}
+              >
+                Save
+              </Button>
           </Grid>
         </Grid>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          open
+          open={this.state.formChanged}
         >
           <SnackbarContent
             message="There are unsaved changes"
@@ -82,6 +213,7 @@ class Profile extends Component {
                 <Button
                   color="primary"
                   variant="contained"
+                  onClick={this.submitHandler}
                 >
                   Save
                 </Button>
