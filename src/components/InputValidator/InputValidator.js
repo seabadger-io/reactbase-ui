@@ -13,7 +13,7 @@ export const validatorFunctions = {
   },
 }
 
-export const validate = (input, validators) => {
+export const isValid = (input, validators) => {
   for (const k of Object.keys(validators)) {
     if (typeof validatorFunctions[k] !== 'function') {
       throw new Error('Invalid validator:', k);
