@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/functions';
 
 const config = {
   apiKey: "AIzaSyDO183bDCbVuKgUCYbYXmhOcevB9cTidHo",
@@ -26,11 +27,13 @@ db.enablePersistence()
   .catch((err) => {
     console.error('Disabled offline access, Error: ', err.code);
   });
+const functions = firebase.functions();
 
 export {
   auth,
   db,
-  providers
+  providers,
+  functions,
 };
 
 export default firebase;

@@ -16,6 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import * as actions from '../../../redux/actions';
 
 
 class Profile extends Component {
@@ -130,6 +131,7 @@ class Profile extends Component {
     this.validateForm(() => {      
       if (!this.formHasErrors()) {
         this.setState({ formChanged: false });
+        this.props.changeUsername(this.state.formValues.username);
       }
     });
     e.preventDefault();
@@ -284,5 +286,11 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeUsername: (username) => dispatch(actions.profileChangeUsername(username)),
+  };
+};
+
 export { Profile as DisconnectedProfile };
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
