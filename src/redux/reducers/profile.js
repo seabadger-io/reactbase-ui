@@ -1,8 +1,11 @@
 import * as actionTypes from '../actions/actionTypes';
 
 export const initialState = {
+  hasLoaded: false,
   username: null,
+  contactEmail: null,
   about: null,
+  location: null,
 };
 
 export default (state = initialState, action) => {
@@ -16,5 +19,6 @@ const profileUpdated = (state, action) => {
   return {
     ...state,
     ...action.profile,
+    hasLoaded: true,
   }
 };

@@ -10,6 +10,12 @@ import Zoom from '@material-ui/core/Zoom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 class Profile extends Component {
@@ -18,6 +24,7 @@ class Profile extends Component {
     formValues: null,
     formChanged: false,
     formErrors: {},
+    outOfSync: false,
   }
 
   formValidations = {
@@ -54,11 +61,31 @@ class Profile extends Component {
     this.setState({ formValues: { ...this.props.profile }});
   }
 
-  hiddenHelperText = (itemId, helperText) => {
+  componentDidUpdate(prevProps) {
+    if (!this.state.outOfSync) {
+      let profileHasChanges = false;
+      for (const k of (Object.keys(this.props.profile))) {
+        if (prevProps.profile[k] !== this.props.profile[k]) {
+          profileHasChanges = true;
+          if (profileHasChanges) break;
+        }
+      }
+      if (profileHasChanges) {
+        if (!this.state.formChanged) {
+          this.setState({ formValues: { ...this.props.profile }});
+        } else {
+          this.setState({ outOfSync: true });
+        }
+      }
+    }
+  }
+
+  hiddenHelperText = (name, helperText) => {
     return {
-      helperText: this.state.activeHelper === itemId ? helperText : null,
+      helperText: this.state.activeHelper === name || this.state.formErrors[name]
+        ? helperText : null,
       inputProps: {
-        onFocus: () => this.setState({ activeHelper: itemId }),
+        onFocus: () => this.setState({ activeHelper: name }),
         onBlur: () => this.setState({ activeHelper: null }),
       }
     }
@@ -111,97 +138,122 @@ class Profile extends Component {
   render() {
     return (
       <Paper style={this.styles.main}>
-        <Typography variant="display1" component="h3">
+        <Typography variant="display1" component="h3" style={{ margin: '15px' }}>
           Your profile
         </Typography>
-        {!this.props.profile.username ?
+        <Dialog
+          open={this.state.outOfSync}
+          onClose={() => { this.setState({ outOfSync: false })}}
+          aria-labelledby="oos-dialog-title"
+          aria-describedby="oos-dialog-description"
+        >
+          <DialogTitle id="oos-dialog-title">Outdated content</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="oos-dialog-description">
+              Your profile was updated on the server and you are editing an
+              outdated copy. If you save your changes, it will overwrite the
+              changes on the server. If you don't mind loosing the changes you
+              made here, just reload this page.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => { this.setState({ outOfSync: false })}}
+              color="primary"
+            >
+              Understood
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {this.props.profile.hasLoaded && !this.props.profile.username ?
           (<Typography variant="caption" style={{ color: red[900], padding: '15px' }}>
             You are almost ready. Please complete the mandatory (*) fields in your profile.
           </Typography>) : null
         }
-        { /* container form */ }
-        <Grid
-          container
-          spacing={16}
-          component="form"
-          onSubmit={this.submitHandler}
-          noValidate
-        >
-          <Grid item container xs={12} sm={4} justify="center">
-            {/* profile photo */}
-            <div style={{ backgroundColor: 'black', width: '160px', height: '200px' }}></div>
+        {this.props.profile.hasLoaded ? 
+        (<Grid
+            container
+            spacing={16}
+            component="form"
+            onSubmit={this.submitHandler}
+            noValidate
+          >
+            <Grid item container xs={12} sm={4} justify="center">
+              {/* profile photo */}
+              <div style={{ backgroundColor: 'black', width: '160px', height: '200px' }}></div>
+            </Grid>
+            <Grid item container xs={12} sm={8} justify="center">
+              {/* user details  */}
+                <TextField
+                  id="username-input"
+                  name="username"
+                  label="Username"
+                  placeholder="Username"
+                  value={this.state.formValues.username || ''}
+                  onChange={this.texfieldChangeHandler}
+                  error={this.state.formErrors.username || false}
+                  fullWidth
+                  {...this.hiddenHelperText(
+                    'username',
+                    'Minimum 4, maximum 24 characters. Only letters, numbers, hyphen and underscore'
+                  )}
+                />
+                <TextField
+                  id="contactemail-input"
+                  name="contactEmail"
+                  label="Contact email"
+                  placeholder="Contact email"
+                  value={this.state.formValues.contactEmail || ''}
+                  onChange={this.texfieldChangeHandler}
+                  type="email"
+                  fullWidth
+                  {...this.hiddenHelperText(
+                    'contactEmail',
+                    'Must be a valid email address, maximum 256 characters long'
+                  )}
+                  error={this.state.formErrors.contactEmail || false}
+                />
+                <TextField
+                  id="location-input"
+                  name="location"
+                  label="Location"
+                  placeholder="Location"
+                  value={this.state.formValues.location || ''}
+                  onChange={this.texfieldChangeHandler}
+                  fullWidth
+                  {...this.hiddenHelperText(
+                    'location',
+                    'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
+                  )}
+                  error={this.state.formErrors.location || false}
+                />
+                <TextField
+                  id="about-input"
+                  name="about"
+                  label="About"
+                  placeholder="About"
+                  value={this.state.formValues.about || ''}
+                  onChange={this.texfieldChangeHandler}
+                  fullWidth
+                  multiline
+                  {...this.hiddenHelperText(
+                    'about',
+                    'Must be maximum 2048 characters long'
+                  )}
+                  error={this.state.formErrors.about}
+                />
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={{ margin: '5px' }}
+                  disabled={!this.state.formChanged}
+                >
+                  Save
+                </Button>
+            </Grid>
           </Grid>
-          <Grid item container xs={12} sm={8} justify="center">
-            {/* user details  */}
-              <TextField
-                id="username-input"
-                name="username"
-                label="Username"
-                placeholder="Username"
-                value={this.state.formValues.username || ''}
-                onChange={this.texfieldChangeHandler}
-                error={this.state.formErrors.username || false}
-                fullWidth
-                {...this.hiddenHelperText(
-                  'username-input',
-                  'Minimum 4, maximum 24 characters. Only letters, numbers, hyphen and underscore'
-                )}
-              />
-              <TextField
-                id="contactemail-input"
-                name="contactEmail"
-                label="Contact email"
-                placeholder="Contact email"
-                value={this.state.formValues.contactEmail || ''}
-                onChange={this.texfieldChangeHandler}
-                type="email"
-                fullWidth
-                {...this.hiddenHelperText(
-                  'username-input',
-                  'Must be a valid email address, maximum 256 characters long'
-                )}
-                error={this.state.formErrors.contactEmail || false}
-              />
-              <TextField
-                id="location-input"
-                name="location"
-                label="Location"
-                placeholder="Location"
-                value={this.state.formValues.location || ''}
-                onChange={this.texfieldChangeHandler}
-                fullWidth
-                {...this.hiddenHelperText(
-                  'location-input',
-                  'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
-                )}
-                error={this.state.formErrors.location || false}
-              />
-              <TextField
-                id="about-input"
-                name="about"
-                label="About"
-                placeholder="About"
-                value={this.state.formValues.about || ''}
-                onChange={this.texfieldChangeHandler}
-                fullWidth
-                multiline
-                {...this.hiddenHelperText(
-                  'about-input',
-                  'Must be maximum 2048 characters long'
-                )}
-                error={this.state.formErrors.about}
-              />
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                style={{ margin: '5px' }}
-                disabled={!this.state.formChanged}
-              >
-                Save
-              </Button>
-          </Grid>
-        </Grid>
+        ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           open={this.state.formChanged}
