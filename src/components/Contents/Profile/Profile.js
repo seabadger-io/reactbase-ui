@@ -59,21 +59,21 @@ class Profile extends Component {
   }
 
   componentWillMount() {
-    this.setState({ formValues: { ...this.props.profile }});
+    this.setState({ formValues: { ...this.props.profile.profile }});
   }
 
   componentDidUpdate(prevProps) {
     if (!this.state.outOfSync) {
       let profileHasChanges = false;
-      for (const k of (Object.keys(this.props.profile))) {
-        if (prevProps.profile[k] !== this.props.profile[k]) {
+      for (const k of (Object.keys(this.props.profile.profile))) {
+        if (prevProps.profile.profile[k] !== this.props.profile.profile[k]) {
           profileHasChanges = true;
           if (profileHasChanges) break;
         }
       }
       if (profileHasChanges) {
         if (!this.state.formChanged) {
-          this.setState({ formValues: { ...this.props.profile }});
+          this.setState({ formValues: { ...this.props.profile.profile }});
         } else {
           this.setState({ outOfSync: true });
         }
@@ -131,7 +131,15 @@ class Profile extends Component {
     this.validateForm(() => {      
       if (!this.formHasErrors()) {
         this.setState({ formChanged: false });
-        this.props.changeUsername(this.state.formValues.username);
+        const profile = {
+          username: '',
+          contactEmail: '',
+          location: '',
+          about: '',
+          ...this.state.formValues
+        };
+        this.props.changeProfile(profile);
+        // this.props.changeUsername(this.state.formValues.username);
       }
     });
     e.preventDefault();
@@ -167,7 +175,7 @@ class Profile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-        {this.props.profile.hasLoaded && !this.props.profile.username ?
+        {this.props.profile.hasLoaded && !this.props.profile.profile.username ?
           (<Typography variant="caption" style={{ color: red[900], padding: '15px' }}>
             You are almost ready. Please complete the mandatory (*) fields in your profile.
           </Typography>) : null
@@ -289,6 +297,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeUsername: (username) => dispatch(actions.profileChangeUsername(username)),
+    changeProfile: (profile) => dispatch(actions.profileChange(profile)),
   };
 };
 

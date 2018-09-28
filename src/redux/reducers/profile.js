@@ -4,10 +4,12 @@ export const initialState = {
   hasLoaded: false,
   changeInProgress: false,
   changeError: null,
-  username: null,
-  contactEmail: null,
-  about: null,
-  location: null,
+  profile: {
+    username: null,
+    contactEmail: null,
+    about: null,
+    location: null,
+  },
 };
 
 export default (state = initialState, action) => {
@@ -23,7 +25,7 @@ export default (state = initialState, action) => {
 const profileUpdated = (state, action) => {
   return {
     ...state,
-    ...action.profile,
+    profile: { ...action.profile },
     hasLoaded: true,
   }
 };
