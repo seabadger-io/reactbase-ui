@@ -12,7 +12,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import * as routes from '../../ContentRouter/routes';
-import * as actions from '../../../redux/actions';
+import * as authActions from '../../../redux/actions/auth';
 
 class UserMenu extends Component {
   menuId = 'appbar-usermenu';
@@ -131,7 +131,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setContinueUrl: (url) => dispatch(actions.setContinueUrl(url)),
+    setContinueUrl: (url) => dispatch(authActions.setContinueUrl(url)),
   }
 };
 

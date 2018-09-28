@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import * as actions from '../../../../redux/actions';
+import * as authActions from '../../../../redux/actions/auth';
 
 const authRedirect = (props) => {
   const redirectTo = props.continueUrl ? props.continueUrl : '/';
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setContinueUrl: (url) => dispatch(actions.setContinueUrl(url))
+    setContinueUrl: (url) => dispatch(authActions.setContinueUrl(url))
   };
 };
 
