@@ -26,11 +26,6 @@ class App extends Component {
     this.props.location.pathname !== routes.ACCOUNT_SUSPENDED) {
       this.props.history.push(routes.ACCOUNT_SUSPENDED);
     }
-    if (this.props.profile &&
-    !this.props.profile.username &&
-    this.props.location.pathname !== routes.MYPROFILE) {
-      this.props.history.push(routes.MYPROFILE);
-    }
   }
 
   render() {

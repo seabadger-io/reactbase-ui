@@ -5,10 +5,9 @@ export const initialState = {
   changeInProgress: false,
   changeError: null,
   profile: {
-    username: null,
-    contactEmail: null,
     about: null,
     location: null,
+    profilePhoto: null,
   },
 };
 
@@ -35,7 +34,7 @@ const profileChangeStart = (state) => {
     ...state,
     changeInProgress: true,
     changeError: null,
-  };
+  }
 };
 
 const profileChangeSuccess = (state) => {
@@ -43,7 +42,7 @@ const profileChangeSuccess = (state) => {
     ...state,
     changeInProgress: false,
     changeError: null,
-  };
+  }
 };
 
 const profileChangeError = (state, action) => {
@@ -51,5 +50,5 @@ const profileChangeError = (state, action) => {
     ...state,
     changeInProgress: false,
     changeError: action.changeError,
-  };
+  }
 };

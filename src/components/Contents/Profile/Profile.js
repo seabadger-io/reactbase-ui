@@ -1,5 +1,4 @@
 import Button from '@material-ui/core/Button';
-import red from '@material-ui/core/colors/red';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -29,17 +28,6 @@ class Profile extends Component {
   }
 
   formValidations = {
-    username: {
-      required: true,
-      minLength: 4,
-      maxLength: 24,
-    },
-    contactEmail: {
-      required: true,
-      maxLength: 256,
-      // http://jsfiddle.net/ghvj4gy9/embedded/result,js/
-      matches: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    },
     about: {
       maxLength: 2048,
     },
@@ -132,14 +120,11 @@ class Profile extends Component {
       if (!this.formHasErrors()) {
         this.setState({ formChanged: false });
         const profile = {
-          username: '',
-          contactEmail: '',
           location: '',
           about: '',
           ...this.state.formValues
         };
         this.props.changeProfile(profile);
-        // this.props.changeUsername(this.state.formValues.username);
       }
     });
     e.preventDefault();
@@ -175,11 +160,6 @@ class Profile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-        {this.props.profile.hasLoaded && !this.props.profile.profile.username ?
-          (<Typography variant="caption" style={{ color: red[900], padding: '15px' }}>
-            You are almost ready. Please complete the mandatory (*) fields in your profile.
-          </Typography>) : null
-        }
         {this.props.profile.hasLoaded ? 
         (<Grid
             container
@@ -194,35 +174,6 @@ class Profile extends Component {
             </Grid>
             <Grid item container xs={12} sm={8} justify="center">
               {/* user details  */}
-                <TextField
-                  id="username-input"
-                  name="username"
-                  label="Username"
-                  placeholder="Username"
-                  value={this.state.formValues.username || ''}
-                  onChange={this.texfieldChangeHandler}
-                  error={this.state.formErrors.username || false}
-                  fullWidth
-                  {...this.hiddenHelperText(
-                    'username',
-                    'Minimum 4, maximum 24 characters. Only letters, numbers, hyphen and underscore'
-                  )}
-                />
-                <TextField
-                  id="contactemail-input"
-                  name="contactEmail"
-                  label="Contact email"
-                  placeholder="Contact email"
-                  value={this.state.formValues.contactEmail || ''}
-                  onChange={this.texfieldChangeHandler}
-                  type="email"
-                  fullWidth
-                  {...this.hiddenHelperText(
-                    'contactEmail',
-                    'Must be a valid email address, maximum 256 characters long'
-                  )}
-                  error={this.state.formErrors.contactEmail || false}
-                />
                 <TextField
                   id="location-input"
                   name="location"
@@ -296,7 +247,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeUsername: (username) => dispatch(actions.profileChangeUsername(username)),
     changeProfile: (profile) => dispatch(actions.profileChange(profile)),
   };
 };

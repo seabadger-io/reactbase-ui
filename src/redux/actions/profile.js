@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { functions as fbFunctions, db, auth } from '../../firebase';
+import { db, auth } from '../../firebase';
 
 export const profileUpdated = (profile) => {
   return {
@@ -45,17 +45,3 @@ export const profileChange = (profile) => {
     });
   };
 }
-
-export const profileChangeUsername = (username) => {
-  return (dispatch) => {
-    dispatch(profileChangeStart());
-    const changeUsername = fbFunctions.httpsCallable('changeUsername');
-    changeUsername({ username: username })
-    .then(() => {
-      dispatch(profileChangeSuccess());
-    })
-    .catch((err) => {
-      dispatch(profileChangeError('Failed to change username', err.code, err.message));
-    });
-  };
-};
