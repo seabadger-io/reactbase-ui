@@ -16,6 +16,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import * as actions from '../../../redux/actions';
+import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 
 
 class Profile extends Component {
@@ -25,6 +26,7 @@ class Profile extends Component {
     formChanged: false,
     formErrors: {},
     outOfSync: false,
+    usernameChangeOpen: false,
   }
 
   formValidations = {
@@ -174,44 +176,66 @@ class Profile extends Component {
             </Grid>
             <Grid item container xs={12} sm={8} justify="center">
               {/* user details  */}
-                <TextField
-                  id="location-input"
-                  name="location"
-                  label="Location"
-                  placeholder="Location"
-                  value={this.state.formValues.location || ''}
-                  onChange={this.texfieldChangeHandler}
-                  fullWidth
-                  {...this.hiddenHelperText(
-                    'location',
-                    'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
-                  )}
-                  error={this.state.formErrors.location || false}
-                />
-                <TextField
-                  id="about-input"
-                  name="about"
-                  label="About"
-                  placeholder="About"
-                  value={this.state.formValues.about || ''}
-                  onChange={this.texfieldChangeHandler}
-                  fullWidth
-                  multiline
-                  {...this.hiddenHelperText(
-                    'about',
-                    'Must be maximum 2048 characters long'
-                  )}
-                  error={this.state.formErrors.about}
-                />
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  style={{ margin: '5px' }}
-                  disabled={!this.state.formChanged}
-                >
-                  Save
-                </Button>
+              <Grid item container xs={12}>
+                <Grid item xs={6} style={{ maxWidth: '100%', flexGrow: 1, alignSelf: 'center' }}>
+                  You are logged in as:
+                  <span style={{ fontWeight: 'bold', margin: '0 10px' }}>
+                    {this.props.auth.userMeta.username}
+                  </span>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    color="primary"
+                    onClick={() => { this.setState({ usernameChangeOpen: true })}}
+                    aria-label="Change username"
+                  >
+                    Change username
+                  </Button>
+                </Grid>
+              </Grid>
+              <UsernameChangeDialog
+                open={this.state.usernameChangeOpen}
+                username={this.props.auth.userMeta.username}
+                onClose={() => { this.setState({ usernameChangeOpen: false })}}
+              />
+              <TextField
+                id="location-input"
+                name="location"
+                label="Location"
+                placeholder="Location"
+                value={this.state.formValues.location || ''}
+                onChange={this.texfieldChangeHandler}
+                fullWidth
+                {...this.hiddenHelperText(
+                  'location',
+                  'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
+                )}
+                error={this.state.formErrors.location || false}
+              />
+              <TextField
+                id="about-input"
+                name="about"
+                label="About"
+                placeholder="About"
+                value={this.state.formValues.about || ''}
+                onChange={this.texfieldChangeHandler}
+                fullWidth
+                multiline
+                {...this.hiddenHelperText(
+                  'about',
+                  'Must be maximum 2048 characters long'
+                )}
+                error={this.state.formErrors.about}
+              />
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                style={{ margin: '5px' }}
+                disabled={!this.state.formChanged}
+              >
+                Save
+              </Button>
             </Grid>
           </Grid>
         ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
@@ -241,6 +265,7 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    auth: state.auth,
     profile: state.profile,
   };
 };
