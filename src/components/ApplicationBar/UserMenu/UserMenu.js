@@ -88,10 +88,15 @@ class UserMenu extends Component {
     const iconStyle = {
       fontSize: '36px'
     };
+    let photoSrc = this.props.photoURL;
+    if (this.props.profile && this.props.profile.profile
+    && this.props.profile.profile.profilePhoto) {
+      photoSrc = this.props.profile.profile.profilePhoto;
+    }
 
     if (this.props.isAuthenticated) {
-      if (this.props.photoURL) {
-        return <Avatar alt="Menu" src={this.props.photoURL} />;
+      if (photoSrc) {
+        return <Avatar alt="Menu" src={photoSrc} />;
       } else {
         return <SettingsIcon style={iconStyle} />;
       }
@@ -126,6 +131,7 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.user !== null,
     photoURL: state.auth.user ? state.auth.user.photoURL : null,
+    profile: state.profile,
   };
 };
 
