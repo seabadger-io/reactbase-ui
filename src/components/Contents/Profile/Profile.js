@@ -192,7 +192,7 @@ class Profile extends Component {
                   backgroundColor: '#ddd',
                   background: this.state.formValues.profilePhoto ? 'none' : `url('${userIcon}')`,
                   backgroundSize: '128px 128px',
-                  border: '1px ridge #000',
+                  border: '1px ridge #ddd',
                 }}
                 onClick={() => { this.setState({ profilePhotoOpen: true })}}
                 tabIndex="1"
