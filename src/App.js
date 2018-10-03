@@ -38,6 +38,7 @@ class App extends Component {
             location={this.props.location}
             history={this.props.history}
             match={this.props.match}
+            auth={this.props.auth}
           />
         </MainContainer>
         <Footer />
@@ -51,6 +52,7 @@ const mapStateToProps = (state) => {
     authContinueUrl: state.auth.continueUrl,
     userMeta: state.auth.userMeta,
     profile: state.profile,
+    auth: state.auth,
   }
 }
 

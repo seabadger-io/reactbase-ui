@@ -9,7 +9,7 @@ class Logout extends React.Component {
   componentDidMount() {
     auth.signOut()
     .then(() => {
-      this.props.history.push(routes.AUTH_REDIRECT);
+      this.props.history.push(routes.HOME);
     });
   }
 

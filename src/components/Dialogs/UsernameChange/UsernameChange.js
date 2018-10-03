@@ -106,7 +106,7 @@ class UsernameChange extends Component {
               !this.state.isValid ? (
                 <Typography variant="body1" style={{ color: red[900] }}>
                   The username must be minimum 4, maximum 24 characters, containing
-                  only alphabetic characters, underscore or dash.
+                  only letters, numbers, underscore or dash.
                 </Typography>
               ) : null
             }

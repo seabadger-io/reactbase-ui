@@ -17,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import * as actions from '../../../redux/actions';
 import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
-
+import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
 
 class Profile extends Component {
   state = {
@@ -27,6 +27,7 @@ class Profile extends Component {
     formErrors: {},
     outOfSync: false,
     usernameChangeOpen: false,
+    profilePhotoOpen: false,
   }
 
   formValidations = {
@@ -102,6 +103,15 @@ class Profile extends Component {
     e.preventDefault();
   }
 
+  profilePhotoCloseHandler = (updatedImage) => {
+    const state = { ...this.state };
+    if (updatedImage) {
+      state.formValues.profilePhoto = updatedImage.src;
+      state.formChanged = true;
+    }
+    this.setState({ ...state, profilePhotoOpen: false });
+  };
+
   validateForm(cb = () => {}) {
     const formErrors = { ...this.state.formErrors };
     for (const field of Object.keys(this.formValidations)) {
@@ -124,6 +134,7 @@ class Profile extends Component {
         const profile = {
           location: '',
           about: '',
+          profilePhoto: '',
           ...this.state.formValues
         };
         this.props.changeProfile(profile);
@@ -172,7 +183,26 @@ class Profile extends Component {
           >
             <Grid item container xs={12} sm={4} justify="center">
               {/* profile photo */}
-              <div style={{ backgroundColor: 'black', width: '160px', height: '200px' }}></div>
+              <div
+                style={{
+                  width: '128px',
+                  height: '128px',
+                  cursor: "pointer"
+                }}
+                onClick={() => { this.setState({ profilePhotoOpen: true })}}
+                tabIndex="1"
+                role="button"
+              >
+                <img
+                  src={this.state.formValues.profilePhoto}
+                  alt="Profile"
+                  title="Profile photo"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                  }}
+                />
+              </div>
             </Grid>
             <Grid item container xs={12} sm={8} justify="center">
               {/* user details  */}
@@ -196,7 +226,11 @@ class Profile extends Component {
               <UsernameChangeDialog
                 open={this.state.usernameChangeOpen}
                 username={this.props.auth.userMeta.username}
-                onClose={() => { this.setState({ usernameChangeOpen: false })}}
+                onClose={() => { this.setState({ usernameChangeOpen: false });}}
+              />
+              <ProfilePhotoDialog
+                open={this.state.profilePhotoOpen}
+                onClose={this.profilePhotoCloseHandler}
               />
               <TextField
                 id="location-input"
@@ -273,6 +307,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeProfile: (profile) => dispatch(actions.profileChange(profile)),
+    setContinueUrl: (url) => dispatch(actions.setContinueUrl(url)),
   };
 };
 
