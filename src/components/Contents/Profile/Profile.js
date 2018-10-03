@@ -18,6 +18,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import * as actions from '../../../redux/actions';
 import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
+import userIcon from './usericon';
 
 class Profile extends Component {
   state = {
@@ -187,11 +188,16 @@ class Profile extends Component {
                 style={{
                   width: '128px',
                   height: '128px',
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  backgroundColor: '#ddd',
+                  background: this.state.formValues.profilePhoto ? 'none' : `url('${userIcon}')`,
+                  backgroundSize: '128px 128px',
+                  border: '1px ridge #000',
                 }}
                 onClick={() => { this.setState({ profilePhotoOpen: true })}}
                 tabIndex="1"
                 role="button"
+                aria-label="Change profile photo"
               >
                 <img
                   src={this.state.formValues.profilePhoto}
@@ -200,6 +206,8 @@ class Profile extends Component {
                   style={{
                     width: '100%',
                     height: 'auto',
+                    display: this.state.formValues.profilePhoto ? 'block' : 'none',
+                    zIndex: 2,
                   }}
                 />
               </div>
