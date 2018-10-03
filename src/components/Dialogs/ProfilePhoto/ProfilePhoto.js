@@ -65,15 +65,22 @@ class ProfilePhoto extends Component {
             imgCheck.height = limit;
             imgCheck.width = Math.floor(limit / ih * iw);
           }
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = imgCheck.width;
-          canvas.height = imgCheck.height;
-          ctx.drawImage(imgCheck, 0, 0, imgCheck.width, imgCheck.height);
-          src = canvas.toDataURL('image/png');
-        } else {
-          src = e.target.result;
         }
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = limit;
+        canvas.height = limit;
+        ctx.clearRect(0, 0, limit, limit);
+        let left = 0;
+        let top = 0;
+        if (imgCheck.width < limit) {
+          left = Math.floor((limit - imgCheck.width) / 2);
+        }
+        if (imgCheck.height < limit) {
+          top = Math.floor((limit - imgCheck.height) / 2);
+        }
+        ctx.drawImage(imgCheck, left, top, imgCheck.width, imgCheck.height);
+        src = canvas.toDataURL('image/png');
         if (src.length < 200000) {
           // very roughly 100kB image, base64 encoded, plus headers, plus 20% margin
           // note: this is also limited on the server side
