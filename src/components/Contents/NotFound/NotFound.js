@@ -33,7 +33,8 @@ const notFound = (props) => {
       <Typography variant="body1" component="p" style={styles.textBlock}>
         The content you are trying to access is not available. This may happen
         when you followed a broken link or trying to access some content which
-        is not available to you.
+        is not available to you.<br/>
+        Note: some pages are only available for logged in users
       </Typography>
       <Typography variant="body1" component="p" style={styles.textBlock}>
         To browse the latest contents please visit the homepage.
