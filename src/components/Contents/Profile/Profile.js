@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -8,16 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import Zoom from '@material-ui/core/Zoom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import * as actions from '../../../redux/actions';
-import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
+import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
+import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 import userIcon from './usericon';
 
 class Profile extends Component {
@@ -26,7 +21,6 @@ class Profile extends Component {
     formValues: null,
     formChanged: false,
     formErrors: {},
-    outOfSync: false,
     usernameChangeOpen: false,
     profilePhotoOpen: false,
   }
@@ -52,25 +46,6 @@ class Profile extends Component {
 
   componentWillMount() {
     this.setState({ formValues: { ...this.props.profile.profile }});
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.state.outOfSync) {
-      let profileHasChanges = false;
-      for (const k of (Object.keys(this.props.profile.profile))) {
-        if (prevProps.profile.profile[k] !== this.props.profile.profile[k]) {
-          profileHasChanges = true;
-          if (profileHasChanges) break;
-        }
-      }
-      if (profileHasChanges) {
-        if (!this.state.formChanged) {
-          this.setState({ formValues: { ...this.props.profile.profile }});
-        } else {
-          this.setState({ outOfSync: true });
-        }
-      }
-    }
   }
 
   hiddenHelperText = (name, helperText) => {
@@ -150,30 +125,6 @@ class Profile extends Component {
         <Typography variant="display1" component="h3" style={{ margin: '15px' }}>
           Your profile
         </Typography>
-        <Dialog
-          open={this.state.outOfSync}
-          onClose={() => { this.setState({ outOfSync: false })}}
-          aria-labelledby="oos-dialog-title"
-          aria-describedby="oos-dialog-description"
-        >
-          <DialogTitle id="oos-dialog-title">Outdated content</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="oos-dialog-description">
-              Your profile was updated on the server and you are editing an
-              outdated copy. If you save your changes, it will overwrite the
-              changes on the server. If you don't mind loosing the changes you
-              made here, just reload this page.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => { this.setState({ outOfSync: false })}}
-              color="primary"
-            >
-              Understood
-            </Button>
-          </DialogActions>
-        </Dialog>
         {this.props.profile.hasLoaded ? 
         (<Grid
             container
