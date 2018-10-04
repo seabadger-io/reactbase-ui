@@ -1,10 +1,10 @@
-import React from 'react';
-
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import * as routes from '../ContentRouter/routes';
 import UserMenu from './UserMenu/UserMenu';
 
 const ApplicationBar = (props) => {
@@ -16,7 +16,9 @@ const ApplicationBar = (props) => {
           color="inherit"
           style={{ flexGrow: '1' }}
         >
-          {props.title}
+          <NavLink to={routes.HOME} style={{ color: 'inherit', textDecoration: 'none' }}>
+            {props.title}
+          </NavLink>
         </Typography>
         {props.children ? props.children : null}
         <UserMenu />
