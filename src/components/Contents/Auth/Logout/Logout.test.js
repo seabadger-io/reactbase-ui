@@ -41,8 +41,8 @@ describe('<Logout />', () => {
     expect(wrapper.find(LinerProgress).length).toBe(1);
   });
 
-  it('should redirect after logout', () => {
-    expect(mockHistory.push).toHaveBeenCalledWith(routes.AUTH_REDIRECT);
+  it('should redirect home after logout', () => {
+    expect(mockHistory.push).toHaveBeenCalledWith(routes.HOME);
   });
 
 });
