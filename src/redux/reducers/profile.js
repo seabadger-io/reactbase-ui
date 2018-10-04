@@ -4,6 +4,7 @@ export const initialState = {
   hasLoaded: false,
   changeInProgress: false,
   changeError: null,
+  changeCompleted: false,
   profile: {
     about: null,
     location: null,
@@ -34,6 +35,7 @@ const profileChangeStart = (state) => {
     ...state,
     changeInProgress: true,
     changeError: null,
+    changeCompleted: false,
   }
 };
 
@@ -42,6 +44,7 @@ const profileChangeSuccess = (state) => {
     ...state,
     changeInProgress: false,
     changeError: null,
+    changeCompleted: true,
   }
 };
 
@@ -50,5 +53,6 @@ const profileChangeError = (state, action) => {
     ...state,
     changeInProgress: false,
     changeError: action.changeError,
+    changeCompleted: true,
   }
 };
