@@ -40,7 +40,6 @@ export const profileChange = (profile) => {
       dispatch(profileChangeSuccess());
     })
     .catch((err) => {
-      console.log(uid, profile, err);
       dispatch(profileChangeError('Failed to change profile', err.code, err.message));
     });
   };
