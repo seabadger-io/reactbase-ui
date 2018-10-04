@@ -14,6 +14,7 @@ import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
 import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 import userIcon from './usericon';
+import { red, green } from '@material-ui/core/colors';
 
 class Profile extends Component {
   state = {
@@ -23,6 +24,7 @@ class Profile extends Component {
     formErrors: {},
     usernameChangeOpen: false,
     profilePhotoOpen: false,
+    changeCompleted: false,
   }
 
   formValidations = {
@@ -46,6 +48,30 @@ class Profile extends Component {
 
   componentWillMount() {
     this.setState({ formValues: { ...this.props.profile.profile }});
+  }
+
+  componentDidUpdate(prevProps) {
+    const state = { ...this.state };
+    let profileHasChanges = false;
+    for (const k of (Object.keys(this.props.profile.profile))) {
+      if (prevProps.profile.profile[k] !== this.props.profile.profile[k]) {
+        profileHasChanges = true;
+        if (profileHasChanges) break;
+      }
+    }
+    if (profileHasChanges) {
+      state.formValues = { ...this.props.profile.profile };
+    }
+    let aChangeCompleted = false;
+    if (false === prevProps.profile.changeCompleted
+    && this.props.profile.changeCompleted) {
+      aChangeCompleted = true;
+      state.formChanged = false;
+      state.changeCompleted = true;
+    }
+    if (profileHasChanges || aChangeCompleted) {
+      this.setState({ ...state });
+    }
   }
 
   hiddenHelperText = (name, helperText) => {
@@ -75,6 +101,7 @@ class Profile extends Component {
       formValues: formValues,
       formErrors: formErrors,
       formChanged: true,
+      changeCompleted: false,
     });
     e.preventDefault();
   }
@@ -106,7 +133,7 @@ class Profile extends Component {
   submitHandler = (e) => {
     this.validateForm(() => {      
       if (!this.formHasErrors()) {
-        this.setState({ formChanged: false });
+        this.setState({ changeCompleted: false });
         const profile = {
           location: '',
           about: '',
@@ -120,6 +147,27 @@ class Profile extends Component {
   }
 
   render() {
+    const {
+      changeInProgress,
+      changeError,
+    } = this.props.profile;
+    const { 
+      formValues,
+      formErrors,
+      changeCompleted,
+    } = this.state;
+    let changeFeedback = null;
+    if (changeCompleted) {
+      changeFeedback = changeError ? (
+        <Typography variant="body2" style={{ color: red[900], flexBasis: '100%' }}>
+          {changeError.error}: {changeError.message}
+        </Typography>
+      ) : (
+        <Typography variant="body2" style={{ color: green[700], flexBasis: '100%' }}>
+          The changes were saved successfully
+        </Typography>
+      );
+    }
     return (
       <Paper style={this.styles.main}>
         <Typography variant="display1" component="h3" style={{ margin: '15px' }}>
@@ -141,7 +189,7 @@ class Profile extends Component {
                   height: '128px',
                   cursor: "pointer",
                   backgroundColor: '#ddd',
-                  background: this.state.formValues.profilePhoto ? 'none' : `url('${userIcon}')`,
+                  background: formValues.profilePhoto ? 'none' : `url('${userIcon}')`,
                   backgroundSize: '128px 128px',
                   border: '1px ridge #ddd',
                 }}
@@ -151,13 +199,13 @@ class Profile extends Component {
                 aria-label="Change profile photo"
               >
                 <img
-                  src={this.state.formValues.profilePhoto}
+                  src={formValues.profilePhoto}
                   alt="Profile"
                   title="Profile photo"
                   style={{
                     width: '100%',
                     height: 'auto',
-                    display: this.state.formValues.profilePhoto ? 'block' : 'none',
+                    display: formValues.profilePhoto ? 'block' : 'none',
                     zIndex: 2,
                   }}
                 />
@@ -196,21 +244,21 @@ class Profile extends Component {
                 name="location"
                 label="Location"
                 placeholder="Location"
-                value={this.state.formValues.location || ''}
+                value={formValues.location || ''}
                 onChange={this.texfieldChangeHandler}
                 fullWidth
                 {...this.hiddenHelperText(
                   'location',
                   'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
                 )}
-                error={this.state.formErrors.location || false}
+                error={formErrors.location || false}
               />
               <TextField
                 id="about-input"
                 name="about"
                 label="About"
                 placeholder="About"
-                value={this.state.formValues.about || ''}
+                value={formValues.about || ''}
                 onChange={this.texfieldChangeHandler}
                 fullWidth
                 multiline
@@ -218,14 +266,15 @@ class Profile extends Component {
                   'about',
                   'Must be maximum 2048 characters long'
                 )}
-                error={this.state.formErrors.about}
+                error={formErrors.about}
               />
+              {changeFeedback}
               <Button
                 type="submit"
                 color="primary"
                 variant="contained"
                 style={{ margin: '5px' }}
-                disabled={!this.state.formChanged}
+                disabled={!this.state.formChanged || changeInProgress}
               >
                 Save
               </Button>
@@ -244,6 +293,7 @@ class Profile extends Component {
                   color="primary"
                   variant="contained"
                   onClick={this.submitHandler}
+                  disabled={!this.state.formChanged || changeInProgress}
                 >
                   Save
                 </Button>
