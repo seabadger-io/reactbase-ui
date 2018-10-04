@@ -15,6 +15,7 @@ import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 import userIcon from './usericon';
 import { red, green } from '@material-ui/core/colors';
+import PropTypes from 'prop-types';
 
 class Profile extends Component {
   state = {
@@ -318,6 +319,11 @@ const mapDispatchToProps = (dispatch) => {
     changeProfile: (profile) => dispatch(actions.profileChange(profile)),
     setContinueUrl: (url) => dispatch(actions.setContinueUrl(url)),
   };
+};
+
+Profile.propTypes = {
+  profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 export { Profile as DisconnectedProfile };
