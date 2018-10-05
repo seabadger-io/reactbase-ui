@@ -24,7 +24,7 @@ export const profileChange = (profile) => {
     return profileChangeError('Profile update failed',
       'unauthenticated', 'You are not logged in to firebase');
   }
-  const uid = auth.currentUser.uid;
+  const { uid } = auth.currentUser;
   return (dispatch) => {
     dispatch(profileChangeStart());
     db.collection('profiles').doc(uid).update({ ...profile })

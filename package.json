@@ -58,7 +58,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "eslintAll": "yarn eslint 'src/**/*.js'"
+    "eslintAll": "yarn eslint --ignore-pattern '*.test.*' 'src/**/*.{js,jsx}'"
   },
   "jest": {
     "collectCoverageFrom": [

@@ -12,16 +12,6 @@ export const initialState = {
   },
 };
 
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case actionTypes.PROFILE_UPDATED: return profileUpdated(state, action);
-    case actionTypes.PROFILE_CHANGE_START: return profileChangeStart(state);
-    case actionTypes.PROFILE_CHANGE_SUCCESS: return profileChangeSuccess(state);
-    case actionTypes.PROFILE_CHANGE_ERROR: return profileChangeError(state, action);
-    default: return state;
-  }
-};
-
 const profileUpdated = (state, action) => ({
   ...state,
   profile: { ...action.profile },
@@ -48,3 +38,13 @@ const profileChangeError = (state, action) => ({
   changeError: action.changeError,
   changeCompleted: true,
 });
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case actionTypes.PROFILE_UPDATED: return profileUpdated(state, action);
+    case actionTypes.PROFILE_CHANGE_START: return profileChangeStart(state);
+    case actionTypes.PROFILE_CHANGE_SUCCESS: return profileChangeSuccess(state);
+    case actionTypes.PROFILE_CHANGE_ERROR: return profileChangeError(state, action);
+    default: return state;
+  }
+};
