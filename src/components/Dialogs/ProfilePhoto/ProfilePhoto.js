@@ -24,8 +24,8 @@ class ProfilePhoto extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.open !== prevProps.open ||
-      this.props.imgSrc !== prevProps.imgSrc) {
+    if (this.props.open !== prevProps.open
+      || this.props.imgSrc !== prevProps.imgSrc) {
       this.setState({
         open: this.props.open,
         imgSrc: this.props.imgSrc,
@@ -38,10 +38,12 @@ class ProfilePhoto extends Component {
 
   setProfilePhoto = () => {
     if (this.state.filename && this.state.imgSrc) {
-      this.setState({ updatedImage: {
-        src: this.state.imgSrc,
-        filename: this.state.filename,
-      }}, this.closeHandler);
+      this.setState({
+        updatedImage: {
+          src: this.state.imgSrc,
+          filename: this.state.filename,
+        },
+      }, this.closeHandler);
     }
   };
 
@@ -94,7 +96,7 @@ class ProfilePhoto extends Component {
             error: 'The file is too large to upload',
           });
         }
-      }
+      };
     };
     if (selectedFile) {
       reader.readAsDataURL(selectedFile);
@@ -118,18 +120,18 @@ class ProfilePhoto extends Component {
         aria-labelledby="pp-dialog-title"
         aria-describedby="pp-dialog-description"
       >
-      <DialogTitle id="pp-dialog-title">Profile photo</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="pp-dialog-description">
-          <Typography variant="caption">
+        <DialogTitle id="pp-dialog-title">Profile photo</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="pp-dialog-description">
+            <Typography variant="caption">
             You can change your profile photo here. The profile photo is expected to be
             a 256x256 pixels image, the uploaded image will be downscaled to fit this
             restriction as needed. Maximum size is approximately 100kB. The photo must
             represent the account owner and the account owner is responsible to ensure
             it is not offensive and doesn't violate copyright.
-          </Typography>
-        </DialogContentText>
-        {
+            </Typography>
+          </DialogContentText>
+          {
           this.state.imgSrc ? (
             <div style={{ textAlign: 'center', margin: '15px' }}>
               <img
@@ -145,11 +147,13 @@ class ProfilePhoto extends Component {
             </div>
           ) : null
         }
-        {
-          this.state.error ?
-          (<Typography variant="body2" style={{ color: red[900] }}>
-            {this.state.error}
-          </Typography>) : null
+          {
+          this.state.error
+            ? (
+              <Typography variant="body2" style={{ color: red[900] }}>
+                {this.state.error}
+              </Typography>
+            ) : null
         }
         </DialogContent>
         <DialogActions>
@@ -182,6 +186,6 @@ class ProfilePhoto extends Component {
       </Dialog>
     );
   }
-};
+}
 
 export default ProfilePhoto;

@@ -20,7 +20,7 @@ const authFailed = (state, action) => ({
   error: action.error,
 });
 
-const logout = (state) => ({
+const logout = state => ({
   ...state,
   user: null,
   userMeta: null,

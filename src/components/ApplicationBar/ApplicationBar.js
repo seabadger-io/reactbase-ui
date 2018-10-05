@@ -7,28 +7,26 @@ import { NavLink } from 'react-router-dom';
 import * as routes from '../ContentRouter/routes';
 import UserMenu from './UserMenu/UserMenu';
 
-const ApplicationBar = (props) => {
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography
-          variant="title"
-          color="inherit"
-          style={{ flexGrow: '1' }}
-        >
-          <NavLink to={routes.HOME} style={{ color: 'inherit', textDecoration: 'none' }}>
-            {props.title}
-          </NavLink>
-        </Typography>
-        {props.children ? props.children : null}
-        <UserMenu />
-      </Toolbar>
-    </AppBar>
-  );
-};
+const ApplicationBar = props => (
+  <AppBar position="static">
+    <Toolbar>
+      <Typography
+        variant="title"
+        color="inherit"
+        style={{ flexGrow: '1' }}
+      >
+        <NavLink to={routes.HOME} style={{ color: 'inherit', textDecoration: 'none' }}>
+          {props.title}
+        </NavLink>
+      </Typography>
+      {props.children ? props.children : null}
+      <UserMenu />
+    </Toolbar>
+  </AppBar>
+);
 
 ApplicationBar.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default ApplicationBar;

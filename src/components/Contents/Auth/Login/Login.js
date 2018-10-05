@@ -17,12 +17,12 @@ class Login extends React.Component {
   startLogin = () => {
     this.setState({ error: null });
     auth.signInWithPopup(providers.google)
-    .then(() => {
-      this.loginWasSuccessful();
-    })
-    .catch((err) => {
-      this.loginFailed(err);
-    });
+      .then(() => {
+        this.loginWasSuccessful();
+      })
+      .catch((err) => {
+        this.loginFailed(err);
+      });
   }
 
   loginWasSuccessful = () => {
@@ -31,9 +31,9 @@ class Login extends React.Component {
   }
 
   loginFailed = (error) => {
-    //TODO: handle auth/account-exists-with-different-credential error code if multiple providers are implemented
+    // TODO: handle auth/account-exists-with-different-credential error code if multiple providers are implemented
     let errorMsg;
-    switch(error.code) {
+    switch (error.code) {
       case 'auth/cancelled-popup-request':
       case 'auth/popup-closed-by-user':
         errorMsg = 'The login process was interrupted';
@@ -84,6 +84,6 @@ class Login extends React.Component {
       </Paper>
     );
   }
-};
+}
 
 export default Login;

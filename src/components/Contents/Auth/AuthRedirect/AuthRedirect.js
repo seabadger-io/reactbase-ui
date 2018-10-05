@@ -9,17 +9,13 @@ const authRedirect = (props) => {
   return <Redirect to={redirectTo} />;
 };
 
-const mapStateToProps = (state) => {
-  return {
-    continueUrl: state.auth.continueUrl,
-  };
-};
+const mapStateToProps = state => ({
+  continueUrl: state.auth.continueUrl,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setContinueUrl: (url) => dispatch(authActions.setContinueUrl(url))
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setContinueUrl: url => dispatch(authActions.setContinueUrl(url)),
+});
 
 export { authRedirect as DisconnectedAuthRedirect };
 export default connect(mapStateToProps, mapDispatchToProps)(authRedirect);

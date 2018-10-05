@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import * as userinfoMonitor from './firebase/userinfoMonitor';
 import * as routes from './components/ContentRouter/routes';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 import ApplicationBar from './components/ApplicationBar/ApplicationBar';
 import Footer from './components/Footer/Footer';
@@ -14,6 +14,7 @@ import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 
 class App extends Component {
   userMetaUnsubscribe = null;
+
   profileUnsubscribe = null;
 
   componentWillMount() {
@@ -21,9 +22,9 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.userMeta &&
-    this.props.userMeta.isSuspended &&
-    this.props.location.pathname !== routes.ACCOUNT_SUSPENDED) {
+    if (this.props.userMeta
+    && this.props.userMeta.isSuspended
+    && this.props.location.pathname !== routes.ACCOUNT_SUSPENDED) {
       this.props.history.push(routes.ACCOUNT_SUSPENDED);
     }
   }
@@ -47,19 +48,15 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    authContinueUrl: state.auth.continueUrl,
-    userMeta: state.auth.userMeta,
-    profile: state.profile,
-    auth: state.auth,
-  }
-}
+const mapStateToProps = state => ({
+  authContinueUrl: state.auth.continueUrl,
+  userMeta: state.auth.userMeta,
+  profile: state.profile,
+  auth: state.auth,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    startUserinfoMonitor: () => userinfoMonitor.start(dispatch),
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  startUserinfoMonitor: () => userinfoMonitor.start(dispatch),
+});
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

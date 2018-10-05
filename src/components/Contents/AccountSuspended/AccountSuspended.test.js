@@ -2,7 +2,7 @@ import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import { DisconnectedAccountSuspended as  AccountSuspended } from './AccountSuspended';
+import { DisconnectedAccountSuspended as AccountSuspended } from './AccountSuspended';
 import * as routes from '../../ContentRouter/routes';
 
 configure({ adapter: new Adapter() });
@@ -11,11 +11,11 @@ describe('<AccountSuspended />', () => {
   let wrapper;
 
   const mockHistory = {
-    replace: jest.fn()
-  }
+    replace: jest.fn(),
+  };
 
   beforeEach(() => {
-    wrapper = shallow(<AccountSuspended history={mockHistory} isSuspended={true} />);
+    wrapper = shallow(<AccountSuspended history={mockHistory} isSuspended />);
   });
 
   it('should render without error', () => {
@@ -27,5 +27,4 @@ describe('<AccountSuspended />', () => {
     wrapper.setProps({ isSuspended: false });
     expect(mockHistory.replace).toHaveBeenCalledWith(routes.HOME);
   });
-
 });

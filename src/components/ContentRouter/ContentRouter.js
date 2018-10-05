@@ -13,7 +13,7 @@ import Profile from '../Contents/Profile/Profile';
 const contentRouter = (props) => {
   const authenticated = props.auth && props.auth.user && props.auth.user.uid;
   const protectedRoutes = [
-    <Route key={routes.MYPROFILE} path={routes.MYPROFILE} exact component={Profile} />
+    <Route key={routes.MYPROFILE} path={routes.MYPROFILE} exact component={Profile} />,
   ];
   return (
     <Switch>

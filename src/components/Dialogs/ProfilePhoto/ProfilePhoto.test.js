@@ -12,7 +12,7 @@ describe('<ProfilePhoto /> Dialog', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallow(<ProfilePhoto open={true} imgSrc="" />);
+    wrapper = shallow(<ProfilePhoto open imgSrc="" />);
   });
 
   it('should render', () => {

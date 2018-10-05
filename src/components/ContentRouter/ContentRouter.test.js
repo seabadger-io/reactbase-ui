@@ -14,25 +14,18 @@ import * as routes from './routes';
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../firebase', () => {
-  return {};
-});
+jest.mock('../../firebase', () => ({}));
 
-jest.mock('../Contents/Auth/AuthRedirect/AuthRedirect', () => {
-  return () => <div />;
-});
+jest.mock('../Contents/Auth/AuthRedirect/AuthRedirect', () => () => <div />);
 
 AuthLogin.prototype.componentDidMount = jest.fn();
 AuthLogout.prototype.componentDidMount = jest.fn();
 
-const getWrapper = (url) => {
-  return mount(
-    <StaticRouter context={{}} location={url}>
-      <ContentRouter />
-    </StaticRouter>
-  );
-}
-
+const getWrapper = url => mount(
+  <StaticRouter context={{}} location={url}>
+    <ContentRouter />
+  </StaticRouter>,
+);
 
 
 describe('<ContentRouter />', () => {
@@ -43,7 +36,7 @@ describe('<ContentRouter />', () => {
     return expect(
       wrapper.find(Route)
         .filterWhere(n => typeof n.prop('component') !== 'undefined')
-        .prop('component')
+        .prop('component'),
     ).toEqual(component);
   };
 
@@ -56,18 +49,18 @@ describe('<ContentRouter />', () => {
   });
 
   it('should route AUTH_LOGIN to AuthLogin', () => {
-    testRouteWithComponent(routes.AUTH_LOGIN, AuthLogin)
+    testRouteWithComponent(routes.AUTH_LOGIN, AuthLogin);
   });
 
   it('should route AUTH_LOGOUT to AuthLogout', () => {
-    testRouteWithComponent(routes.AUTH_LOGOUT, AuthLogout)
+    testRouteWithComponent(routes.AUTH_LOGOUT, AuthLogout);
   });
 
   it('should route AUTH_REDIRECT to AuthRedirect', () => {
-    testRouteWithComponent(routes.AUTH_REDIRECT, AuthRedirect)
+    testRouteWithComponent(routes.AUTH_REDIRECT, AuthRedirect);
   });
 
   it('should route unknown route to NotFound', () => {
-    testRouteWithComponent('/NonExistentRoute42', NotFound)
+    testRouteWithComponent('/NonExistentRoute42', NotFound);
   });
 });

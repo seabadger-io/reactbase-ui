@@ -13,8 +13,8 @@ describe('<NotFound />', () => {
   let wrapper;
 
   const mockHistory = {
-    push: jest.fn()
-  }
+    push: jest.fn(),
+  };
 
   beforeEach(() => {
     wrapper = shallow(<NotFound history={mockHistory} />);
@@ -29,5 +29,4 @@ describe('<NotFound />', () => {
     wrapper.find(Button).first().simulate('click');
     expect(mockHistory.push).toHaveBeenCalledWith(routes.HOME);
   });
-
 });

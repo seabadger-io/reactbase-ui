@@ -11,18 +11,14 @@ import firebase from '../../../../firebase';
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../../../firebase', () => {
-  return {
-    auth: {
-      signInWithPopup: jest.fn(() => {
-        return new Promise(resolve => resolve({}));
-      }),
-    },
-    providers: {
-      google: 'google',
-    }
-  };
-});
+jest.mock('../../../../firebase', () => ({
+  auth: {
+    signInWithPopup: jest.fn(() => new Promise(resolve => resolve({}))),
+  },
+  providers: {
+    google: 'google',
+  },
+}));
 
 describe('<Login />', () => {
   let wrapper;
@@ -50,5 +46,4 @@ describe('<Login />', () => {
     wrapper.setState({ error: 'unknownerror' });
     expect(wrapper.find(Button).first().render().text()).toEqual('Retry login');
   });
-
 });

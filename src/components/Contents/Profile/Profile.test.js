@@ -6,12 +6,10 @@ import { DisconnectedProfile as Profile } from './Profile';
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../../firebase', () => {
-  return {
-    firebase: {},
-    auth: {},
-  };
-});
+jest.mock('../../../firebase', () => ({
+  firebase: {},
+  auth: {},
+}));
 
 describe('<Profile />', () => {
   let wrapper;

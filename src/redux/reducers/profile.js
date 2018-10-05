@@ -22,37 +22,29 @@ export default (state = initialState, action) => {
   }
 };
 
-const profileUpdated = (state, action) => {
-  return {
-    ...state,
-    profile: { ...action.profile },
-    hasLoaded: true,
-  }
-};
+const profileUpdated = (state, action) => ({
+  ...state,
+  profile: { ...action.profile },
+  hasLoaded: true,
+});
 
-const profileChangeStart = (state) => {
-  return {
-    ...state,
-    changeInProgress: true,
-    changeError: null,
-    changeCompleted: false,
-  }
-};
+const profileChangeStart = state => ({
+  ...state,
+  changeInProgress: true,
+  changeError: null,
+  changeCompleted: false,
+});
 
-const profileChangeSuccess = (state) => {
-  return {
-    ...state,
-    changeInProgress: false,
-    changeError: null,
-    changeCompleted: true,
-  }
-};
+const profileChangeSuccess = state => ({
+  ...state,
+  changeInProgress: false,
+  changeError: null,
+  changeCompleted: true,
+});
 
-const profileChangeError = (state, action) => {
-  return {
-    ...state,
-    changeInProgress: false,
-    changeError: action.changeError,
-    changeCompleted: true,
-  }
-};
+const profileChangeError = (state, action) => ({
+  ...state,
+  changeInProgress: false,
+  changeError: action.changeError,
+  changeCompleted: true,
+});

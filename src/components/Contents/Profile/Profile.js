@@ -9,13 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import Zoom from '@material-ui/core/Zoom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { red, green } from '@material-ui/core/colors';
+import PropTypes from 'prop-types';
 import * as actions from '../../../redux/actions';
 import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
 import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 import userIcon from './usericon';
-import { red, green } from '@material-ui/core/colors';
-import PropTypes from 'prop-types';
 
 class Profile extends Component {
   state = {
@@ -34,7 +34,7 @@ class Profile extends Component {
     },
     location: {
       maxLength: 256,
-    }
+    },
   }
 
   styles = {
@@ -43,12 +43,12 @@ class Profile extends Component {
       maxWidth: '800px',
       padding: '15px',
       justifyContent: 'center',
-      height: 'fit-content'
+      height: 'fit-content',
     },
   }
 
   componentWillMount() {
-    this.setState({ formValues: { ...this.props.profile.profile }});
+    this.setState({ formValues: { ...this.props.profile.profile } });
   }
 
   componentDidUpdate(prevProps) {
@@ -64,7 +64,7 @@ class Profile extends Component {
       state.formValues = { ...this.props.profile.profile };
     }
     let aChangeCompleted = false;
-    if (false === prevProps.profile.changeCompleted
+    if (prevProps.profile.changeCompleted === false
     && this.props.profile.changeCompleted) {
       aChangeCompleted = true;
       state.formChanged = false;
@@ -75,16 +75,14 @@ class Profile extends Component {
     }
   }
 
-  hiddenHelperText = (name, helperText) => {
-    return {
-      helperText: this.state.activeHelper === name || this.state.formErrors[name]
-        ? helperText : null,
-      inputProps: {
-        onFocus: () => this.setState({ activeHelper: name }),
-        onBlur: () => this.setState({ activeHelper: null }),
-      }
-    }
-  }
+  hiddenHelperText = (name, helperText) => ({
+    helperText: this.state.activeHelper === name || this.state.formErrors[name]
+      ? helperText : null,
+    inputProps: {
+      onFocus: () => this.setState({ activeHelper: name }),
+      onBlur: () => this.setState({ activeHelper: null }),
+    },
+  })
 
   texfieldChangeHandler = (e) => {
     const formValues = { ...this.state.formValues };
@@ -99,8 +97,8 @@ class Profile extends Component {
       formErrors[name] = false;
     }
     this.setState({
-      formValues: formValues,
-      formErrors: formErrors,
+      formValues,
+      formErrors,
       formChanged: true,
       changeCompleted: false,
     });
@@ -122,24 +120,24 @@ class Profile extends Component {
       formErrors[field] = !inputIsValid(this.state.formValues[field],
         this.formValidations[field]);
     }
-    this.setState({ formErrors: formErrors }, cb);
+    this.setState({ formErrors }, cb);
   }
 
   formHasErrors() {
     return Object.keys(this.state.formErrors) // check all error fields
-      .map((k) => this.state.formErrors[k]) // map key to value
+      .map(k => this.state.formErrors[k]) // map key to value
       .reduce((acc, cur) => acc || cur, false); // reduce values so it's true is any of them true
   }
 
   submitHandler = (e) => {
-    this.validateForm(() => {      
+    this.validateForm(() => {
       if (!this.formHasErrors()) {
         this.setState({ changeCompleted: false });
         const profile = {
           location: '',
           about: '',
           profilePhoto: '',
-          ...this.state.formValues
+          ...this.state.formValues,
         };
         this.props.changeProfile(profile);
       }
@@ -152,7 +150,7 @@ class Profile extends Component {
       changeInProgress,
       changeError,
     } = this.props.profile;
-    const { 
+    const {
       formValues,
       formErrors,
       changeCompleted,
@@ -161,7 +159,9 @@ class Profile extends Component {
     if (changeCompleted) {
       changeFeedback = changeError ? (
         <Typography variant="body2" style={{ color: red[900], flexBasis: '100%' }}>
-          {changeError.error}: {changeError.message}
+          {changeError.error}
+:
+          {changeError.message}
         </Typography>
       ) : (
         <Typography variant="body2" style={{ color: green[700], flexBasis: '100%' }}>
@@ -174,8 +174,8 @@ class Profile extends Component {
         <Typography variant="display1" component="h3" style={{ margin: '15px' }}>
           Your profile
         </Typography>
-        {this.props.profile.hasLoaded ? 
-        (<Grid
+        {this.props.profile.hasLoaded
+          ? (<Grid
             container
             spacing={16}
             component="form"
@@ -188,13 +188,13 @@ class Profile extends Component {
                 style={{
                   width: '128px',
                   height: '128px',
-                  cursor: "pointer",
+                  cursor: 'pointer',
                   backgroundColor: '#ddd',
                   background: formValues.profilePhoto ? 'none' : `url('${userIcon}')`,
                   backgroundSize: '128px 128px',
                   border: '1px ridge #ddd',
                 }}
-                onClick={() => { this.setState({ profilePhotoOpen: true })}}
+                onClick={() => { this.setState({ profilePhotoOpen: true }); }}
                 tabIndex="1"
                 role="button"
                 aria-label="Change profile photo"
@@ -224,7 +224,7 @@ class Profile extends Component {
                 <Grid item xs={4}>
                   <Button
                     color="primary"
-                    onClick={() => { this.setState({ usernameChangeOpen: true })}}
+                    onClick={() => { this.setState({ usernameChangeOpen: true }); }}
                     aria-label="Change username"
                   >
                     Change username
@@ -234,7 +234,7 @@ class Profile extends Component {
               <UsernameChangeDialog
                 open={this.state.usernameChangeOpen}
                 username={this.props.auth.userMeta.username}
-                onClose={() => { this.setState({ usernameChangeOpen: false });}}
+                onClose={() => { this.setState({ usernameChangeOpen: false }); }}
               />
               <ProfilePhotoDialog
                 open={this.state.profilePhotoOpen}
@@ -250,7 +250,7 @@ class Profile extends Component {
                 fullWidth
                 {...this.hiddenHelperText(
                   'location',
-                  'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters'
+                  'If you provide us your location, your potential customers can find you more easily. Maximum 256 characters',
                 )}
                 error={formErrors.location || false}
               />
@@ -265,7 +265,7 @@ class Profile extends Component {
                 multiline
                 {...this.hiddenHelperText(
                   'about',
-                  'Must be maximum 2048 characters long'
+                  'Must be maximum 2048 characters long',
                 )}
                 error={formErrors.about}
               />
@@ -281,7 +281,7 @@ class Profile extends Component {
               </Button>
             </Grid>
           </Grid>
-        ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
+          ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           open={this.state.formChanged}
@@ -298,7 +298,7 @@ class Profile extends Component {
                 >
                   Save
                 </Button>
-              </Zoom>
+              </Zoom>,
             ]}
           />
         </Snackbar>
@@ -307,19 +307,15 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth,
-    profile: state.profile,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+  profile: state.profile,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeProfile: (profile) => dispatch(actions.profileChange(profile)),
-    setContinueUrl: (url) => dispatch(actions.setContinueUrl(url)),
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  changeProfile: profile => dispatch(actions.profileChange(profile)),
+  setContinueUrl: url => dispatch(actions.setContinueUrl(url)),
+});
 
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,

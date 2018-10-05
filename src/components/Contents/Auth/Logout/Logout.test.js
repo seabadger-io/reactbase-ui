@@ -11,22 +11,18 @@ import * as routes from '../../../ContentRouter/routes';
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../../../firebase', () => {
-  return {
-    auth: {
-      signOut: jest.fn(() => {
-        return new Promise(resolve => resolve({}));
-      }),
-    }
-  };
-});
+jest.mock('../../../../firebase', () => ({
+  auth: {
+    signOut: jest.fn(() => new Promise(resolve => resolve({}))),
+  },
+}));
 
 describe('<Logout />', () => {
   let wrapper;
 
   const mockHistory = {
-    push: jest.fn()
-  }
+    push: jest.fn(),
+  };
 
   beforeEach(() => {
     wrapper = shallow(<Logout history={mockHistory} />);
@@ -44,5 +40,4 @@ describe('<Logout />', () => {
   it('should redirect home after logout', () => {
     expect(mockHistory.push).toHaveBeenCalledWith(routes.HOME);
   });
-
 });

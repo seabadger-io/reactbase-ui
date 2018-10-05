@@ -4,7 +4,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import { Redirect } from 'react-router-dom';
 
-import { DisconnectedAuthRedirect as AuthRedirect} from './AuthRedirect';
+import { DisconnectedAuthRedirect as AuthRedirect } from './AuthRedirect';
 
 configure({ adapter: new Adapter() });
 
@@ -17,7 +17,7 @@ describe('<AuthRedirect />', () => {
 
   it('should redirect to continueUrl', () => {
     const testUrl = '/testurl';
-    wrapper.setProps({ continueUrl: testUrl })
+    wrapper.setProps({ continueUrl: testUrl });
     expect(wrapper.contains(<Redirect to={testUrl} />)).toBe(true);
   });
 

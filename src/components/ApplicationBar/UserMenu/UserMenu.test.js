@@ -41,7 +41,7 @@ describe('<UserMenu />', () => {
 
   it('should open the menu on click', () => {
     expect(wrapper.find(Menu).filter({ open: false }).length).toBe(1);
-    wrapper.find(IconButton).simulate('click', { currentTarget: <div></div> });
+    wrapper.find(IconButton).simulate('click', { currentTarget: <div /> });
     expect(wrapper.find(Menu).filter({ open: true }).length).toBe(1);
   });
 
@@ -56,5 +56,4 @@ describe('<UserMenu />', () => {
       expect(node.render().text()).toMatch(/(Profile|Logout)/);
     });
   });
-
 });

@@ -2,7 +2,6 @@ import authReducer, { initialState } from './auth';
 import * as actionTypes from '../actions/actionTypes';
 
 describe('auth reducer', () => {
-
   it('should not change the state on unknown action', () => {
     expect(authReducer(undefined, {})).toEqual(initialState);
   });
@@ -22,7 +21,7 @@ describe('auth reducer', () => {
   it('should reset error to null on successful login', () => {
     const startState = {
       ...initialState,
-      error: 'notnull'
+      error: 'notnull',
     };
     const payload = { user: {} };
     const state = authReducer(startState, {
@@ -67,7 +66,7 @@ describe('auth reducer', () => {
       userMeta: 'notnull',
     };
     const state = authReducer(startState, {
-      type: actionTypes.AUTH_LOGOUT
+      type: actionTypes.AUTH_LOGOUT,
     });
     expect(state).toEqual({
       ...initialState,

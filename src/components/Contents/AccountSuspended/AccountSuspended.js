@@ -12,10 +12,10 @@ class AccountSuspended extends React.Component {
       maxWidth: '640px',
       padding: '15px',
       justifyContent: 'center',
-      height: 'fit-content'
+      height: 'fit-content',
     },
     textBlock: {
-      margin: '15px 0'
+      margin: '15px 0',
     },
   }
 
@@ -46,14 +46,11 @@ class AccountSuspended extends React.Component {
       </Paper>
     );
   }
-};
+}
 
-const mapStateToProps = (state) => {
-  return {
-    isSuspended: state.auth.userMeta ? state.auth.userMeta.isSuspended : false,
-  }
-};
+const mapStateToProps = state => ({
+  isSuspended: state.auth.userMeta ? state.auth.userMeta.isSuspended : false,
+});
 
 export { AccountSuspended as DisconnectedAccountSuspended };
 export default connect(mapStateToProps)(AccountSuspended);
-

@@ -1,42 +1,32 @@
+import { assert } from '@firebase/util';
 import * as actionTypes from './actionTypes';
 import * as profileActions from './profile';
 import firebase from '../../firebase';
-import { assert } from '@firebase/util';
 
-jest.mock('../../firebase', () => {
-  return {
-    firebase: {},
-    auth: {},
-  };
-});
+jest.mock('../../firebase', () => ({
+  firebase: {},
+  auth: {},
+}));
 
-const mockDb = (shouldResolve = true) => {
-  return {
-    collection: () => {
-      return {
-        doc: () => {
-          return {
-            update: () => {
-              return new Promise((resolve, reject) => {
-                if (shouldResolve) {
-                  resolve();
-                } else {
-                  reject({ code: 'code', message: 'message' });
-                }
-              });
-            }
-          }
+const mockDb = (shouldResolve = true) => ({
+  collection: () => ({
+    doc: () => ({
+      update: () => new Promise((resolve, reject) => {
+        if (shouldResolve) {
+          resolve();
+        } else {
+          reject({ code: 'code', message: 'message' });
         }
-      }
-    }
-  }
-};
+      }),
+    }),
+  }),
+});
 
 describe('profile actions', () => {
   it('should return expected action on profile updated', () => {
     const payload = {
       profile: { test: 'ok' },
-    }
+    };
     const expected = {
       type: actionTypes.PROFILE_UPDATED,
       ...payload,
@@ -65,28 +55,28 @@ describe('profile actions', () => {
       changeError: error,
     };
     expect(profileActions.profileChangeError(error.error, error.code, error.message))
-    .toEqual(expected);
+      .toEqual(expected);
   });
 
   describe('profile change', () => {
     const profile = {
-      about: 'test'
+      about: 'test',
     };
 
     beforeEach(() => {
       firebase.auth = {
         currentUser: {
-          uid: 'UID'
-        }
+          uid: 'UID',
+        },
       };
     });
 
     it('should return error if not authenticated', () => {
       firebase.auth = {
-        currentUser: null
+        currentUser: null,
       };
       expect(profileActions.profileChange(profile))
-      .toHaveProperty('type', actionTypes.PROFILE_CHANGE_ERROR);
+        .toHaveProperty('type', actionTypes.PROFILE_CHANGE_ERROR);
     });
 
     it('should dispatch profileChangeSuccess on success', () => {
@@ -107,14 +97,13 @@ describe('profile actions', () => {
       thunkFunc(dispatch);
       expect(dispatch).toHaveBeenCalledWith(profileActions.profileChangeStart());
       firebase.db.collection().doc().update().then(() => {
-        assert(false, 'should not call this on error')
+        assert(false, 'should not call this on error');
       })
-      .catch(() => {
-        expect(dispatch).toHaveBeenCalledWith(profileActions.profileChangeError(
-          'Failed to change profile', 'code', 'message'
-        ));
-      });
+        .catch(() => {
+          expect(dispatch).toHaveBeenCalledWith(profileActions.profileChangeError(
+            'Failed to change profile', 'code', 'message',
+          ));
+        });
     });
-
   });
 });

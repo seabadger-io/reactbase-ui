@@ -2,18 +2,17 @@ import profileReducer, { initialState } from './profile';
 import * as actionTypes from '../actions/actionTypes';
 
 describe('profile reducer', () => {
-
   it('should not change the state on unknown action', () => {
     expect(profileReducer(undefined, {})).toEqual(initialState);
   });
 
   it('should store profile and set hasLoaded on profile load', () => {
     const payload = {
-      profile: { field: 'newprofile' }
+      profile: { field: 'newprofile' },
     };
     const state = profileReducer(undefined, {
       type: actionTypes.PROFILE_UPDATED,
-      ...payload
+      ...payload,
     });
     expect(state.profile).toEqual(payload.profile);
     expect(state.hasLoaded).toBe(true);
@@ -33,7 +32,7 @@ describe('profile reducer', () => {
       changeCompleted: false,
     };
     const state = profileReducer(prevState, {
-      type: actionTypes.PROFILE_CHANGE_START
+      type: actionTypes.PROFILE_CHANGE_START,
     });
     expect(state).toEqual(expected);
   });
@@ -52,7 +51,7 @@ describe('profile reducer', () => {
       changeCompleted: true,
     };
     const state = profileReducer(prevState, {
-      type: actionTypes.PROFILE_CHANGE_SUCCESS
+      type: actionTypes.PROFILE_CHANGE_SUCCESS,
     });
     expect(state).toEqual(expected);
   });
@@ -65,8 +64,8 @@ describe('profile reducer', () => {
       changeCompleted: false,
     };
     const payload = {
-      changeError: 'newerror'
-    }
+      changeError: 'newerror',
+    };
     const expected = {
       ...initialState,
       changeInProgress: false,
@@ -79,5 +78,4 @@ describe('profile reducer', () => {
     });
     expect(state).toEqual(expected);
   });
-
 });

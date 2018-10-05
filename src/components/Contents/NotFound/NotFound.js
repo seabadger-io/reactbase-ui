@@ -14,10 +14,10 @@ const notFound = (props) => {
       maxWidth: '640px',
       padding: '15px',
       justifyContent: 'center',
-      height: 'fit-content'
+      height: 'fit-content',
     },
     textBlock: {
-      margin: '15px 0'
+      margin: '15px 0',
     },
   };
 
@@ -33,7 +33,8 @@ const notFound = (props) => {
       <Typography variant="body1" component="p" style={styles.textBlock}>
         The content you are trying to access is not available. This may happen
         when you followed a broken link or trying to access some content which
-        is not available to you.<br/>
+        is not available to you.
+        <br />
         Note: some pages are only available for logged in users
       </Typography>
       <Typography variant="body1" component="p" style={styles.textBlock}>

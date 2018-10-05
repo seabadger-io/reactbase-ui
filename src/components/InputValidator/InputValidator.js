@@ -1,17 +1,9 @@
 export const validatorFunctions = {
-  required: (input, isRequired) => {
-    return !isRequired || Boolean(input);
-  },
-  minLength: (input, minLength) => {
-    return input && input.length >= minLength
-  },
-  maxLength: (input, maxLength) => {
-    return !input || input.length <= maxLength;
-  },
-  matches: (input, regExp) => {
-    return typeof input === 'string' && input.match(regExp);
-  },
-}
+  required: (input, isRequired) => !isRequired || Boolean(input),
+  minLength: (input, minLength) => input && input.length >= minLength,
+  maxLength: (input, maxLength) => !input || input.length <= maxLength,
+  matches: (input, regExp) => typeof input === 'string' && input.match(regExp),
+};
 
 export const isValid = (input, validators) => {
   for (const k of Object.keys(validators)) {
@@ -23,4 +15,4 @@ export const isValid = (input, validators) => {
     }
   }
   return true;
-}
+};

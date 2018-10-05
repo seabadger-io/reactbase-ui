@@ -18,7 +18,7 @@ class UserMenu extends Component {
   menuId = 'appbar-usermenu';
 
   state = {
-    anchorEl: null
+    anchorEl: null,
   }
 
   openMenuHandler = (event) => {
@@ -39,7 +39,7 @@ class UserMenu extends Component {
     this.redirectToPath(path);
   }
 
-  buildMenu(isOpen=false) {
+  buildMenu(isOpen = false) {
     // menu items: [ 'path' or handler, 'title' ]
     const authenticatedMenuItems = [
       [routes.MYPROFILE, 'Profile'],
@@ -65,7 +65,7 @@ class UserMenu extends Component {
         onClose={this.closeMenu}
         MenuListProps={{ disablePadding: true }}
       >
-      {
+        {
         menuItems.map(([pathOrHandler, title]) => {
           let clickHandler;
           if (typeof pathOrHandler === 'function') {
@@ -86,7 +86,7 @@ class UserMenu extends Component {
 
   getMenuIcon() {
     const iconStyle = {
-      fontSize: '36px'
+      fontSize: '36px',
     };
     let photoSrc = this.props.photoURL;
     if (this.props.profile && this.props.profile.profile
@@ -97,12 +97,10 @@ class UserMenu extends Component {
     if (this.props.isAuthenticated) {
       if (photoSrc) {
         return <Avatar alt="Menu" src={photoSrc} />;
-      } else {
-        return <SettingsIcon style={iconStyle} />;
       }
-    } else {
-      return <AccountCircleIcon style={iconStyle} />;
+      return <SettingsIcon style={iconStyle} />;
     }
+    return <AccountCircleIcon style={iconStyle} />;
   }
 
   render() {
@@ -121,25 +119,21 @@ class UserMenu extends Component {
       </div>
     );
   }
-};
-
-UserMenu.propTypes = {
-  isAuthenticated: PropTypes.bool
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.user !== null,
-    photoURL: state.auth.user ? state.auth.user.photoURL : null,
-    profile: state.profile,
-  };
+UserMenu.propTypes = {
+  isAuthenticated: PropTypes.bool,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setContinueUrl: (url) => dispatch(authActions.setContinueUrl(url)),
-  }
-};
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.user !== null,
+  photoURL: state.auth.user ? state.auth.user.photoURL : null,
+  profile: state.profile,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setContinueUrl: url => dispatch(authActions.setContinueUrl(url)),
+});
 
 export { UserMenu as DisconnectedUserMenu };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserMenu));

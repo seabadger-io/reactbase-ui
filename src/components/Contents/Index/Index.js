@@ -1,9 +1,7 @@
 import React from 'react';
 
-const index = (props) => {
-  return (
-    <div></div>
-  );
-};
+const index = props => (
+  <div />
+);
 
 export default index;

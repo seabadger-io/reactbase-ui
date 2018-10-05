@@ -6,12 +6,12 @@ const themeProvider = (props) => {
   const theme = createMuiTheme({
     palette: {
       primary: {
-        light: lightBlue["600"],
-        main: lightBlue["800"],
-        dark: lightBlue["900"],
-        contrastText: '#fff'
-      }
-    }
+        light: lightBlue['600'],
+        main: lightBlue['800'],
+        dark: lightBlue['900'],
+        contrastText: '#fff',
+      },
+    },
   });
 
   return (
@@ -19,6 +19,6 @@ const themeProvider = (props) => {
       {props.children}
     </MuiThemeProvider>
   );
-}
+};
 
 export default themeProvider;

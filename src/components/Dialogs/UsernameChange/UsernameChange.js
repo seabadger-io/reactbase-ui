@@ -9,8 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import { functions as fbFunctions } from '../../../firebase';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { functions as fbFunctions } from '../../../firebase';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 
 class UsernameChange extends Component {
@@ -29,8 +29,8 @@ class UsernameChange extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.username !== prevProps.username ||
-    this.props.open !== prevProps.open) {
+    if (this.props.username !== prevProps.username
+    || this.props.open !== prevProps.open) {
       this.setState({ newUsername: this.props.username, open: this.props.open });
     }
   }
@@ -39,17 +39,17 @@ class UsernameChange extends Component {
     this.setState({ inProgress: true, error: null, changed: false });
     const change = fbFunctions.httpsCallable('changeUsername');
     change({ username: this.state.newUsername })
-    .then(() => {
-      this.setState({
-        inProgress: false,
-        error: null,
-        changed: true,
-        locallyChanged: false,
+      .then(() => {
+        this.setState({
+          inProgress: false,
+          error: null,
+          changed: true,
+          locallyChanged: false,
+        });
+      })
+      .catch((err) => {
+        this.setState({ inProgress: false, error: err });
       });
-    })
-    .catch((err) => {
-      this.setState({ inProgress: false, error: err });
-    });
   };
 
   usernameChangeHandler = (event) => {
@@ -58,7 +58,7 @@ class UsernameChange extends Component {
       locallyChanged: true,
       isValid: inputIsValid(event.currentTarget.value, {
         matches: /^[a-zA-Z0-9_-]{4,24}$/,
-      })
+      }),
     });
   };
 
@@ -113,13 +113,17 @@ class UsernameChange extends Component {
             {
               this.state.error ? (
                 <Typography variant="body2" style={{ color: red[900] }}>
-                  There was an error: [{this.state.error.code}] {this.state.error.message}
+                  There was an error: [
+                  {this.state.error.code}
+]
+                  {' '}
+                  {this.state.error.message}
                 </Typography>
               ) : null
             }
             {
               this.state.changed ? (
-                <Typography variant="body2"style={{ color: green[700] }}>
+                <Typography variant="body2" style={{ color: green[700] }}>
                   Your username was changed successfully
                 </Typography>
               ) : null
@@ -149,6 +153,6 @@ class UsernameChange extends Component {
       </Dialog>
     );
   }
-};
+}
 
 export default UsernameChange;

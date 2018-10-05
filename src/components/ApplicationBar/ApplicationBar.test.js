@@ -17,13 +17,13 @@ describe('<ApplicationBar />', () => {
   });
 
   it('should render render a title', () => {
-    expect(wrapper.find(Typography).filter({variant: "title"}).length).toBe(1);
+    expect(wrapper.find(Typography).filter({ variant: 'title' }).length).toBe(1);
   });
 
   it('should render the title as set in prop', () => {
     const testTitle = 'testtitle';
-    wrapper.setProps({ title: testTitle })
-    expect(wrapper.find(Typography).filter({variant: "title"}).render().text())
+    wrapper.setProps({ title: testTitle });
+    expect(wrapper.find(Typography).filter({ variant: 'title' }).render().text())
       .toEqual(testTitle);
   });
 
