@@ -1,16 +1,18 @@
-import React from 'react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { auth } from '../../../../firebase';
 import * as routes from '../../../ContentRouter/routes';
 
 class Logout extends React.Component {
   componentDidMount() {
     auth.signOut()
-    .then(() => {
-      this.props.history.push(routes.HOME);
-    });
+      .then(() => {
+        const { history } = this.props;
+        history.push(routes.HOME);
+      });
   }
 
   render() {
@@ -24,5 +26,11 @@ class Logout extends React.Component {
     );
   }
 }
+
+Logout.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Logout;
