@@ -6,10 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { functions as fbFunctions } from '../../../firebase';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 
@@ -25,7 +26,8 @@ class UsernameChange extends Component {
   };
 
   componentWillMount() {
-    this.setState({ newUsername: this.props.username, open: this.props.open });
+    const { username, open } = this.props;
+    this.setState({ newUsername: username, open });
   }
 
   componentDidUpdate(prevProps) {
@@ -154,5 +156,14 @@ class UsernameChange extends Component {
     );
   }
 }
+
+UsernameChange.propTypes = {
+  username: PropTypes.string.isRequired,
+  open: PropTypes.bool,
+};
+
+UsernameChange.defaultProps = {
+  open: false,
+};
 
 export default UsernameChange;
