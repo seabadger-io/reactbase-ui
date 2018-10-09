@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
 
 import Credits from './Credits/Credits';
 
@@ -23,6 +24,17 @@ const Footer = (props) => {
       <Credits />
     </Paper>
   );
+};
+
+Footer.propTypes = {
+  theme: PropTypes.shape({
+    palette: PropTypes.shape({
+      primary: PropTypes.shape({
+        color: PropTypes.string.isRequired,
+        main: PropTypes.string.isRequired,
+      }),
+    }),
+  }).isRequired,
 };
 
 export default withTheme()(Footer);
