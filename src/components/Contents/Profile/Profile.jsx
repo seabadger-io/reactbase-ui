@@ -178,11 +178,10 @@ class Profile extends Component {
         },
       },
       auth: {
-        userMeta: {
-          username,
-        },
+        userMeta,
       },
     } = this.props;
+    const username = userMeta ? userMeta.username : '';
     const {
       formValues,
       formErrors,
