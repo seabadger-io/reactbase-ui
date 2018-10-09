@@ -127,6 +127,12 @@ class Profile extends Component {
     this.setState({ ...state, profilePhotoOpen: false });
   };
 
+  profilePhotoKeyboardHandler = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.setState({ profilePhotoOpen: true });
+    }
+  };
+
   submitHandler = (e) => {
     const { formValues } = this.state;
     const { changeProfile } = this.props;
@@ -224,6 +230,7 @@ class Profile extends Component {
                   border: '1px ridge #ddd',
                 }}
                 onClick={() => { this.setState({ profilePhotoOpen: true }); }}
+                onKeyPress={this.profilePhotoKeyboardHandler}
                 tabIndex="0"
                 role="button"
                 aria-label="Change profile photo"
@@ -350,7 +357,7 @@ const mapDispatchToProps = dispatch => ({
 Profile.propTypes = {
   profile: PropTypes.shape({
     profile: PropTypes.shape({
-
+      profilePhoto: PropTypes.string,
     }),
   }).isRequired,
   auth: PropTypes.shape({
