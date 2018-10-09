@@ -238,6 +238,7 @@ class Profile extends Component {
               />
               <ProfilePhotoDialog
                 open={this.state.profilePhotoOpen}
+                imgSrc={this.props.profile.profile.profilePhoto}
                 onClose={this.profilePhotoCloseHandler}
               />
               <TextField
