@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
