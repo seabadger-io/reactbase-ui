@@ -3,11 +3,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import * as routes from '../ContentRouter/routes';
 import UserMenu from './UserMenu/UserMenu';
 
-const ApplicationBar = props => (
+const ApplicationBar = ({ title, children }) => (
   <AppBar position="static">
     <Toolbar>
       <Typography
@@ -15,11 +15,11 @@ const ApplicationBar = props => (
         color="inherit"
         style={{ flexGrow: '1' }}
       >
-        <NavLink to={routes.HOME} style={{ color: 'inherit', textDecoration: 'none' }}>
-          {props.title}
-        </NavLink>
+        <Link to={routes.HOME} style={{ color: 'inherit', textDecoration: 'none' }}>
+          {title}
+        </Link>
       </Typography>
-      {props.children ? props.children : null}
+      {children}
       <UserMenu />
     </Toolbar>
   </AppBar>
@@ -27,6 +27,15 @@ const ApplicationBar = props => (
 
 ApplicationBar.propTypes = {
   title: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
 };
 
-export default ApplicationBar;
+ApplicationBar.defaultProps = {
+  children: null,
+};
+
+export { ApplicationBar as DisconnectedApplicationBar };
+export default withRouter(ApplicationBar);

@@ -21,21 +21,43 @@ class UserMenu extends Component {
     anchorEl: null,
   }
 
-  openMenuHandler = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  getMenuIcon() {
+    const iconStyle = {
+      fontSize: '36px',
+    };
+    const { isAuthenticated, photoURL, profile } = this.props;
+    let photoSrc = photoURL;
+    if (profile && profile.profile
+    && profile.profile.profilePhoto) {
+      photoSrc = profile.profile.profilePhoto;
+    }
+
+    if (isAuthenticated) {
+      if (photoSrc) {
+        return <Avatar alt="Menu" src={photoSrc} />;
+      }
+      return <SettingsIcon style={iconStyle} />;
+    }
+    return <AccountCircleIcon style={iconStyle} />;
   }
 
   closeMenu = () => {
     this.setState({ anchorEl: null });
   }
 
+  openMenuHandler = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  }
+
   redirectToPath = (path) => {
-    this.props.history.push(path);
+    const { history } = this.props;
+    history.push(path);
     this.closeMenu();
   }
 
   redirectWithContinueUrl = (path) => {
-    this.props.setContinueUrl(this.props.location);
+    const { setContinueUrl, location } = this.props;
+    setContinueUrl(location);
     this.redirectToPath(path);
   }
 
@@ -48,11 +70,13 @@ class UserMenu extends Component {
     const anonMenuItems = [
       [() => this.redirectWithContinueUrl(routes.AUTH_LOGIN), 'Login'],
     ];
-    const menuItems = this.props.isAuthenticated ? authenticatedMenuItems : anonMenuItems;
+    const { isAuthenticated } = this.props;
+    const { anchorEl } = this.state;
+    const menuItems = isAuthenticated ? authenticatedMenuItems : anonMenuItems;
     return (
       <Menu
         id={this.menuId}
-        anchorEl={this.state.anchorEl}
+        anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
@@ -84,27 +108,9 @@ class UserMenu extends Component {
     );
   }
 
-  getMenuIcon() {
-    const iconStyle = {
-      fontSize: '36px',
-    };
-    let photoSrc = this.props.photoURL;
-    if (this.props.profile && this.props.profile.profile
-    && this.props.profile.profile.profilePhoto) {
-      photoSrc = this.props.profile.profile.profilePhoto;
-    }
-
-    if (this.props.isAuthenticated) {
-      if (photoSrc) {
-        return <Avatar alt="Menu" src={photoSrc} />;
-      }
-      return <SettingsIcon style={iconStyle} />;
-    }
-    return <AccountCircleIcon style={iconStyle} />;
-  }
-
   render() {
-    const menuIsOpen = Boolean(this.state.anchorEl);
+    const { anchorEl } = this.state;
+    const menuIsOpen = Boolean(anchorEl);
     return (
       <div>
         <IconButton
@@ -121,10 +127,6 @@ class UserMenu extends Component {
   }
 }
 
-UserMenu.propTypes = {
-  isAuthenticated: PropTypes.bool,
-};
-
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.user !== null,
   photoURL: state.auth.user ? state.auth.user.photoURL : null,
@@ -134,6 +136,25 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setContinueUrl: url => dispatch(authActions.setContinueUrl(url)),
 });
+
+UserMenu.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+  setContinueUrl: PropTypes.func.isRequired,
+  photoURL: PropTypes.string,
+  profile: PropTypes.shape({
+    
+  }),
+};
+
+UserMenu.defaultProps = {
+  isAuthenticated: false,
+};
 
 export { UserMenu as DisconnectedUserMenu };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserMenu));

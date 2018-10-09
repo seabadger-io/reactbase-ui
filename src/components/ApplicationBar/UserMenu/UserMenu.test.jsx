@@ -13,11 +13,21 @@ import { DisconnectedUserMenu as UserMenu } from './UserMenu';
 
 configure({ adapter: new Adapter() });
 
+const reqProps = {
+  location: {
+    pathname: '/',
+  },
+  history: {
+    push: jest.fn(),
+  },
+  setContinueUrl: jest.fn(),
+};
+
 describe('<UserMenu />', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallow(<UserMenu />);
+    wrapper = shallow(<UserMenu {...reqProps} />);
   });
 
   it('should have a menu icon with AccountCircleIcon', () => {

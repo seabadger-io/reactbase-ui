@@ -10,5 +10,14 @@
   ],
   "rules": {
     "no-use-before-define": ["error", { "functions": false, "classes": true }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.{js,jsx}"],
+      "rules": {
+        "no-unused-expressions": "off",
+        "no-undef": "off"
+      }
+    }
+  ]
 }
