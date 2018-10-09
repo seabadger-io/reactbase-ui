@@ -1,3 +1,4 @@
+/* eslint "react/no-did-update-set-state": "off" */
 import Button from '@material-ui/core/Button';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
@@ -31,16 +32,18 @@ class UsernameChange extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.username !== prevProps.username
-    || this.props.open !== prevProps.open) {
-      this.setState({ newUsername: this.props.username, open: this.props.open });
+    const { username, open } = this.props;
+    if (username !== prevProps.username
+    || open !== prevProps.open) {
+      this.setState({ newUsername: username, open });
     }
   }
 
   changeUsername = () => {
     this.setState({ inProgress: true, error: null, changed: false });
     const change = fbFunctions.httpsCallable('changeUsername');
-    change({ username: this.state.newUsername })
+    const { newUsername } = this.state;
+    change({ username: newUsername })
       .then(() => {
         this.setState({
           inProgress: false,
@@ -65,8 +68,9 @@ class UsernameChange extends Component {
   };
 
   closeHandler = () => {
-    if (typeof this.props.onClose === 'function') {
-      this.props.onClose();
+    const { onClose } = this.props;
+    if (typeof onClose === 'function') {
+      onClose();
     }
     this.setState({
       open: false,
@@ -77,9 +81,12 @@ class UsernameChange extends Component {
   };
 
   render() {
+    const {
+      open, newUsername, isValid, error, changed, inProgress, locallyChanged,
+    } = this.state;
     return (
       <Dialog
-        open={this.state.open}
+        open={open}
         onClose={this.closeHandler}
         aria-labelledby="unc-dialog-title"
         aria-describedby="unc-dialog-description"
@@ -97,15 +104,15 @@ class UsernameChange extends Component {
             label="Username"
             placeholder="Username"
             onChange={this.usernameChangeHandler}
-            value={this.state.newUsername}
+            value={newUsername}
             fullWidth
             required
-            error={!this.state.isValid}
+            error={!isValid}
             aria-describedby="unc-input-feedback"
           />
           <DialogContentText id="unc-input-feedback" aria-live="assertive">
             {
-              !this.state.isValid ? (
+              !isValid ? (
                 <Typography variant="body1" style={{ color: red[900] }}>
                   The username must be minimum 4, maximum 24 characters, containing
                   only letters, numbers, underscore or dash.
@@ -113,25 +120,25 @@ class UsernameChange extends Component {
               ) : null
             }
             {
-              this.state.error ? (
+              error ? (
                 <Typography variant="body2" style={{ color: red[900] }}>
                   There was an error: [
-                  {this.state.error.code}
+                  {error.code}
 ]
                   {' '}
-                  {this.state.error.message}
+                  {error.message}
                 </Typography>
               ) : null
             }
             {
-              this.state.changed ? (
+              changed ? (
                 <Typography variant="body2" style={{ color: green[700] }}>
                   Your username was changed successfully
                 </Typography>
               ) : null
             }
             {
-              this.state.inProgress ? (
+              inProgress ? (
                 <LinearProgress />
               ) : null
             }
@@ -141,7 +148,7 @@ class UsernameChange extends Component {
           <Button
             onClick={this.changeUsername}
             color="primary"
-            disabled={!this.state.locallyChanged || this.state.inProgress}
+            disabled={!locallyChanged || inProgress}
           >
             Change username
           </Button>
@@ -160,10 +167,12 @@ class UsernameChange extends Component {
 UsernameChange.propTypes = {
   username: PropTypes.string.isRequired,
   open: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 UsernameChange.defaultProps = {
   open: false,
+  onClose: null,
 };
 
 export default UsernameChange;
