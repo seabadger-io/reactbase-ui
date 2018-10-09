@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 
 import * as routes from '../../ContentRouter/routes';
 
@@ -47,6 +48,12 @@ const notFound = (props) => {
       </Grid>
     </Paper>
   );
+};
+
+notFound.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export { notFound as DisconnectedNotFound };

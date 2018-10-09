@@ -1,6 +1,6 @@
 import React from 'react';
 
-const index = props => (
+const index = () => (
   <div />
 );
 
