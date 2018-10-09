@@ -1,3 +1,4 @@
+/* eslint "react/no-did-update-set-state": "off" */
 import {
   Button,
   Dialog,
@@ -9,6 +10,7 @@ import {
 } from '@material-ui/core';
 import red from '@material-ui/core/colors/red';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class ProfilePhoto extends Component {
   state = {
@@ -20,15 +22,17 @@ class ProfilePhoto extends Component {
   };
 
   componentWillMount() {
-    this.setState({ open: this.props.open, imgSrc: this.props.imgSrc });
+    const { open, imgSrc } = this.props;
+    this.setState({ open, imgSrc });
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.open !== prevProps.open
-      || this.props.imgSrc !== prevProps.imgSrc) {
+    const { open, imgSrc } = this.props;
+    if (open !== prevProps.open
+      || imgSrc !== prevProps.imgSrc) {
       this.setState({
-        open: this.props.open,
-        imgSrc: this.props.imgSrc,
+        open,
+        imgSrc,
         filename: null,
         updatedImage: null,
         error: null,
@@ -37,11 +41,12 @@ class ProfilePhoto extends Component {
   }
 
   setProfilePhoto = () => {
-    if (this.state.filename && this.state.imgSrc) {
+    const { filename, imgSrc } = this.state;
+    if (filename && imgSrc) {
       this.setState({
         updatedImage: {
-          src: this.state.imgSrc,
-          filename: this.state.filename,
+          src: imgSrc,
+          filename,
         },
       }, this.closeHandler);
     }
@@ -57,7 +62,6 @@ class ProfilePhoto extends Component {
         const limit = 256;
         const iw = imgCheck.width;
         const ih = imgCheck.height;
-        let src;
         if (iw > limit || ih > limit) {
           const ratio = iw / ih;
           if (ratio > 1) {
@@ -82,7 +86,7 @@ class ProfilePhoto extends Component {
           top = Math.floor((limit - imgCheck.height) / 2);
         }
         ctx.drawImage(imgCheck, left, top, imgCheck.width, imgCheck.height);
-        src = canvas.toDataURL('image/png');
+        const src = canvas.toDataURL('image/png');
         if (src.length < 200000) {
           // very roughly 100kB image, base64 encoded, plus headers, plus 20% margin
           // note: this is also limited on the server side
@@ -104,8 +108,10 @@ class ProfilePhoto extends Component {
   };
 
   closeHandler = () => {
-    if (typeof this.props.onClose === 'function') {
-      this.props.onClose(this.state.updatedImage);
+    const { onClose } = this.props;
+    const { updatedImage } = this.state;
+    if (typeof onClose === 'function') {
+      onClose(updatedImage);
     }
     this.setState({
       open: false,
@@ -113,9 +119,12 @@ class ProfilePhoto extends Component {
   };
 
   render() {
+    const {
+      open, imgSrc, error, filename,
+    } = this.state;
     return (
       <Dialog
-        open={this.state.open}
+        open={open}
         onClose={this.closeHandler}
         aria-labelledby="pp-dialog-title"
         aria-describedby="pp-dialog-description"
@@ -128,17 +137,17 @@ class ProfilePhoto extends Component {
             a 256x256 pixels image, the uploaded image will be downscaled to fit this
             restriction as needed. Maximum size is approximately 100kB. The photo must
             represent the account owner and the account owner is responsible to ensure
-            it is not offensive and doesn't violate copyright.
+            it is not offensive and doesn&apos;t violate copyright.
             </Typography>
           </DialogContentText>
           {
-          this.state.imgSrc ? (
+          imgSrc ? (
             <div style={{ textAlign: 'center', margin: '15px' }}>
               <img
                 ref={this.profileImageRef}
                 id="profileImg"
                 alt="Profile"
-                src={this.state.imgSrc}
+                src={imgSrc}
                 style={{
                   maxWidth: '256px',
                   maxHeight: '256px',
@@ -148,18 +157,17 @@ class ProfilePhoto extends Component {
           ) : null
         }
           {
-          this.state.error
-            ? (
-              <Typography variant="body2" style={{ color: red[900] }}>
-                {this.state.error}
-              </Typography>
-            ) : null
+          error ? (
+            <Typography variant="body2" style={{ color: red[900] }}>
+              {error}
+            </Typography>
+          ) : null
         }
         </DialogContent>
         <DialogActions>
           <Button
             color="primary"
-            disabled={!this.state.filename}
+            disabled={!filename}
             onClick={this.setProfilePhoto}
           >
             Set as profile photo
@@ -187,5 +195,17 @@ class ProfilePhoto extends Component {
     );
   }
 }
+
+ProfilePhoto.propTypes = {
+  open: PropTypes.bool,
+  imgSrc: PropTypes.string,
+  onClose: PropTypes.func,
+};
+
+ProfilePhoto.defaultProps = {
+  open: false,
+  imgSrc: '',
+  onClose: null,
+};
 
 export default ProfilePhoto;
