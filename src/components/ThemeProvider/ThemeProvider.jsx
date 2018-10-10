@@ -1,8 +1,9 @@
 import React from 'react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import lightBlue from '@material-ui/core/colors/lightBlue';
+import PropTypes from 'prop-types';
 
-const themeProvider = (props) => {
+const themeProvider = ({ children }) => {
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -16,9 +17,20 @@ const themeProvider = (props) => {
 
   return (
     <MuiThemeProvider theme={theme}>
-      {props.children}
+      {children}
     </MuiThemeProvider>
   );
+};
+
+themeProvider.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+};
+
+themeProvider.defaultProps = {
+  children: null,
 };
 
 export default themeProvider;

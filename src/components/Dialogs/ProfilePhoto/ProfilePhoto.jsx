@@ -172,14 +172,14 @@ class ProfilePhoto extends Component {
           >
             Set as profile photo
           </Button>
-          <input
-            accept="image/*"
-            id="raised-button-file"
-            type="file"
-            style={{ display: 'none' }}
-            onChange={this.fileSelected}
-          />
           <label htmlFor="raised-button-file">
+            <input
+              accept="image/*"
+              id="raised-button-file"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={this.fileSelected}
+            />
             <Button component="span" color="primary">
               Upload file
             </Button>
