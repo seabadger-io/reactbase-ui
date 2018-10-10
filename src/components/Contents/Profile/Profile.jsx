@@ -1,3 +1,4 @@
+/* eslint react/no-did-update-set-state: "off" */
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -48,24 +49,35 @@ class Profile extends Component {
   }
 
   componentWillMount() {
-    this.setState({ formValues: { ...this.props.profile.profile } });
+    const {
+      profile: {
+        profile,
+      },
+    } = this.props;
+    this.setState({ formValues: { ...profile } });
   }
 
   componentDidUpdate(prevProps) {
     const state = { ...this.state };
     let profileHasChanges = false;
-    for (const k of (Object.keys(this.props.profile.profile))) {
-      if (prevProps.profile.profile[k] !== this.props.profile.profile[k]) {
+    const {
+      profile: {
+        profile,
+        changeCompleted,
+      },
+    } = this.props;
+    for (const k of (Object.keys(profile))) {
+      if (prevProps.profile.profile[k] !== profile[k]) {
         profileHasChanges = true;
         if (profileHasChanges) break;
       }
     }
     if (profileHasChanges) {
-      state.formValues = { ...this.props.profile.profile };
+      state.formValues = { ...profile };
     }
     let aChangeCompleted = false;
     if (prevProps.profile.changeCompleted === false
-    && this.props.profile.changeCompleted) {
+    && changeCompleted) {
       aChangeCompleted = true;
       state.formChanged = false;
       state.changeCompleted = true;
@@ -75,20 +87,21 @@ class Profile extends Component {
     }
   }
 
-  hiddenHelperText = (name, helperText) => ({
-    helperText: this.state.activeHelper === name || this.state.formErrors[name]
-      ? helperText : null,
-    inputProps: {
-      onFocus: () => this.setState({ activeHelper: name }),
-      onBlur: () => this.setState({ activeHelper: null }),
-    },
-  })
+  hiddenHelperText = (name, helperText) => {
+    const { activeHelper, formErrors } = { ...this.state };
+    return {
+      helperText: activeHelper === name || formErrors[name]
+        ? helperText : null,
+      inputProps: {
+        onFocus: () => this.setState({ activeHelper: name }),
+        onBlur: () => this.setState({ activeHelper: null }),
+      },
+    };
+  };
 
   texfieldChangeHandler = (e) => {
-    const formValues = { ...this.state.formValues };
-    const formErrors = { ...this.state.formErrors };
-    const name = e.target.name;
-    const value = e.target.value;
+    const { formValues, formErrors } = { ...this.state };
+    const { name, value } = e.target;
     formValues[name] = value;
     if (typeof this.formValidations[name] === 'object') {
       formErrors[name] = !inputIsValid(value,
@@ -114,22 +127,15 @@ class Profile extends Component {
     this.setState({ ...state, profilePhotoOpen: false });
   };
 
-  validateForm(cb = () => {}) {
-    const formErrors = { ...this.state.formErrors };
-    for (const field of Object.keys(this.formValidations)) {
-      formErrors[field] = !inputIsValid(this.state.formValues[field],
-        this.formValidations[field]);
+  profilePhotoKeyboardHandler = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.setState({ profilePhotoOpen: true });
     }
-    this.setState({ formErrors }, cb);
-  }
-
-  formHasErrors() {
-    return Object.keys(this.state.formErrors) // check all error fields
-      .map(k => this.state.formErrors[k]) // map key to value
-      .reduce((acc, cur) => acc || cur, false); // reduce values so it's true is any of them true
-  }
+  };
 
   submitHandler = (e) => {
+    const { formValues } = this.state;
+    const { changeProfile } = this.props;
     this.validateForm(() => {
       if (!this.formHasErrors()) {
         this.setState({ changeCompleted: false });
@@ -137,30 +143,58 @@ class Profile extends Component {
           location: '',
           about: '',
           profilePhoto: '',
-          ...this.state.formValues,
+          ...formValues,
         };
-        this.props.changeProfile(profile);
+        changeProfile(profile);
       }
     });
     e.preventDefault();
   }
 
+  formHasErrors() {
+    const { formErrors } = this.state;
+    return Object.keys(formErrors) // check all error fields
+      .map(k => formErrors[k]) // map key to value
+      .reduce((acc, cur) => acc || cur, false); // reduce values so it's true is any of them true
+  }
+
+  validateForm(cb = () => {}) {
+    const { formErrors, formValues } = this.state;
+    for (const field of Object.keys(this.formValidations)) {
+      formErrors[field] = !inputIsValid(formValues[field],
+        this.formValidations[field]);
+    }
+    this.setState({ formErrors }, cb);
+  }
+
   render() {
     const {
-      changeInProgress,
-      changeError,
-    } = this.props.profile;
+      profile: {
+        changeInProgress,
+        changeError,
+        hasLoaded,
+        profile: {
+          profilePhoto,
+        },
+      },
+      auth: {
+        userMeta,
+      },
+    } = this.props;
+    const username = userMeta ? userMeta.username : '';
     const {
       formValues,
       formErrors,
+      formChanged,
       changeCompleted,
+      usernameChangeOpen,
+      profilePhotoOpen,
     } = this.state;
     let changeFeedback = null;
     if (changeCompleted) {
       changeFeedback = changeError ? (
         <Typography variant="body2" style={{ color: red[900], flexBasis: '100%' }}>
-          {changeError.error}
-:
+          {`${changeError.error}:`}
           {changeError.message}
         </Typography>
       ) : (
@@ -174,8 +208,8 @@ class Profile extends Component {
         <Typography variant="display1" component="h3" style={{ margin: '15px' }}>
           Your profile
         </Typography>
-        {this.props.profile.hasLoaded
-          ? (<Grid
+        {hasLoaded ? (
+          <Grid
             container
             spacing={16}
             component="form"
@@ -195,7 +229,8 @@ class Profile extends Component {
                   border: '1px ridge #ddd',
                 }}
                 onClick={() => { this.setState({ profilePhotoOpen: true }); }}
-                tabIndex="1"
+                onKeyPress={this.profilePhotoKeyboardHandler}
+                tabIndex="0"
                 role="button"
                 aria-label="Change profile photo"
               >
@@ -218,7 +253,7 @@ class Profile extends Component {
                 <Grid item xs={6} style={{ maxWidth: '100%', flexGrow: 1, alignSelf: 'center' }}>
                   You are logged in as:
                   <span style={{ fontWeight: 'bold', margin: '0 10px' }}>
-                    {this.props.auth.userMeta.username}
+                    {username}
                   </span>
                 </Grid>
                 <Grid item xs={4}>
@@ -232,13 +267,13 @@ class Profile extends Component {
                 </Grid>
               </Grid>
               <UsernameChangeDialog
-                open={this.state.usernameChangeOpen}
-                username={this.props.auth.userMeta.username}
+                open={usernameChangeOpen}
+                username={username}
                 onClose={() => { this.setState({ usernameChangeOpen: false }); }}
               />
               <ProfilePhotoDialog
-                open={this.state.profilePhotoOpen}
-                imgSrc={this.props.profile.profile.profilePhoto}
+                open={profilePhotoOpen}
+                imgSrc={profilePhoto}
                 onClose={this.profilePhotoCloseHandler}
               />
               <TextField
@@ -276,16 +311,16 @@ class Profile extends Component {
                 color="primary"
                 variant="contained"
                 style={{ margin: '5px' }}
-                disabled={!this.state.formChanged || changeInProgress}
+                disabled={!formChanged || changeInProgress}
               >
                 Save
               </Button>
             </Grid>
           </Grid>
-          ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
+        ) : <LinearProgress varian="query" style={{ margin: '15px' }} /> }
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          open={this.state.formChanged}
+          open={formChanged}
         >
           <SnackbarContent
             message="There are unsaved changes"
@@ -295,7 +330,7 @@ class Profile extends Component {
                   color="primary"
                   variant="contained"
                   onClick={this.submitHandler}
-                  disabled={!this.state.formChanged || changeInProgress}
+                  disabled={!formChanged || changeInProgress}
                 >
                   Save
                 </Button>
@@ -319,8 +354,16 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Profile.propTypes = {
-  profile: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  profile: PropTypes.shape({
+    profile: PropTypes.shape({
+      profilePhoto: PropTypes.string,
+    }),
+  }).isRequired,
+  auth: PropTypes.shape({
+    userMeta: PropTypes.shape({
+      username: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 export { Profile as DisconnectedProfile };
