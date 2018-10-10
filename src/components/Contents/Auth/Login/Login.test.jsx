@@ -23,14 +23,14 @@ jest.mock('../../../../firebase', () => ({
 const mockHistory = {
   history: {
     push: jest.fn(),
-  }
+  },
 };
 
 describe('<Login />', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallow(<Login { ...mockHistory } />);
+    wrapper = shallow(<Login {...mockHistory} />);
   });
 
   it('should call firebase signInWithPopup', () => {
