@@ -1,5 +1,9 @@
 import * as actionTypes from './actionTypes';
 
+export const authLoaded = () => ({
+  type: actionTypes.AUTH_LOADED,
+});
+
 export const authSuccess = user => ({
   type: actionTypes.AUTH_SUCCESS,
   user,

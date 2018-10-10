@@ -8,6 +8,7 @@ import ContentRouter from './components/ContentRouter/ContentRouter';
 import * as routes from './components/ContentRouter/routes';
 import Footer from './components/Footer/Footer';
 import MainContainer from './components/HOC/MainContainer/MainContainer';
+import SplashScreen from './components/SplashScreen/SplashScreen';
 import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 import userinfoMonitor from './firebase/userinfoMonitor';
 
@@ -38,12 +39,17 @@ class App extends Component {
         <CssBaseline />
         <ApplicationBar title="React Photo" />
         <MainContainer>
-          <ContentRouter
-            location={location}
-            history={history}
-            match={match}
-            auth={auth}
-          />
+          {
+            auth.hasLoaded
+              ? (
+                <ContentRouter
+                  location={location}
+                  history={history}
+                  match={match}
+                  auth={auth}
+                />
+              ) : <SplashScreen />
+          }
         </MainContainer>
         <Footer />
       </ThemeProvider>

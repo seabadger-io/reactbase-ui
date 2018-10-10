@@ -5,7 +5,13 @@ export const initialState = {
   error: null,
   continueUrl: null,
   userMeta: null,
+  hasLoaded: false,
 };
+
+const authHasLoaded = state => ({
+  ...state,
+  hasLoaded: true,
+});
 
 const authSuccess = (state, action) => ({
   ...state,
@@ -39,6 +45,7 @@ const userMetaUpdated = (state, action) => ({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.AUTH_LOADED: return authHasLoaded(state);
     case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
     case actionTypes.AUTH_FAIL: return authFailed(state, action);
     case actionTypes.AUTH_LOGOUT: return logout(state, action);

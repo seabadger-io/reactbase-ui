@@ -7,6 +7,7 @@ export default {
     let profileUnsubscribe;
 
     auth.onAuthStateChanged((user) => {
+      dispatch(actions.authLoaded());
       if (user) {
         dispatch(actions.authSuccess(user));
         userMetaUnsubscribe = db.collection('users').doc(user.uid)
