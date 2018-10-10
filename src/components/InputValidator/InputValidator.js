@@ -1,18 +1,17 @@
 export const validatorFunctions = {
   required: (input, isRequired) => !isRequired || Boolean(input),
-  minLength: (input, minLength) => input && input.length >= minLength,
-  maxLength: (input, maxLength) => !input || input.length <= maxLength,
-  matches: (input, regExp) => typeof input === 'string' && input.match(regExp),
+  minLength: (input, minLength) => Boolean(input && input.length >= minLength),
+  maxLength: (input, maxLength) => Boolean(!input || input.length <= maxLength),
+  matches: (input, regExp) => Boolean(typeof input === 'string' && regExp.test(input)),
 };
 
-export const isValid = (input, validators) => {
-  for (const k of Object.keys(validators)) {
-    if (typeof validatorFunctions[k] !== 'function') {
-      throw new Error('Invalid validator:', k);
-    }
-    if (!validatorFunctions[k](input, validators[k])) {
-      return false;
-    }
-  }
-  return true;
-};
+export const isValid = (input, validators) => (
+  Object.keys(validators)
+    .map((k) => {
+      if (typeof validatorFunctions[k] !== 'function') {
+        throw new Error('Invalid validator:', k);
+      }
+      return validatorFunctions[k](input, validators[k]);
+    })
+    .reduce((acc, cur) => acc && cur, true)
+);
