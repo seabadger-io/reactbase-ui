@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -20,14 +21,25 @@ class AccountSuspended extends React.Component {
   }
 
   componentWillMount() {
-    if (!this.props.isSuspended) {
-      this.props.history.replace(routes.HOME);
+    const {
+      isSuspended,
+      history: {
+        replace,
+      },
+    } = this.props;
+    if (!isSuspended) {
+      replace(routes.HOME);
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      history: {
+        replace,
+      },
+    } = this.props;
     if (!nextProps.isSuspended) {
-      this.props.history.replace(routes.HOME);
+      replace(routes.HOME);
     }
   }
 
@@ -51,6 +63,17 @@ class AccountSuspended extends React.Component {
 const mapStateToProps = state => ({
   isSuspended: state.auth.userMeta ? state.auth.userMeta.isSuspended : false,
 });
+
+AccountSuspended.propTypes = {
+  isSuspended: PropTypes.bool,
+  history: PropTypes.shape({
+    replace: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+AccountSuspended.defaultProps = {
+  isSuspended: false,
+};
 
 export { AccountSuspended as DisconnectedAccountSuspended };
 export default connect(mapStateToProps)(AccountSuspended);
