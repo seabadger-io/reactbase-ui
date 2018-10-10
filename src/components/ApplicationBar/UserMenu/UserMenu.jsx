@@ -148,12 +148,16 @@ UserMenu.propTypes = {
   setContinueUrl: PropTypes.func.isRequired,
   photoURL: PropTypes.string,
   profile: PropTypes.shape({
-    
+    profile: PropTypes.shape({
+      profilePhoto: PropTypes.string,
+    }),
   }),
 };
 
 UserMenu.defaultProps = {
   isAuthenticated: false,
+  photoURL: null,
+  profile: null,
 };
 
 export { UserMenu as DisconnectedUserMenu };
