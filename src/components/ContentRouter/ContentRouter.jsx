@@ -1,17 +1,17 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-
-import * as routes from './routes';
-import Index from '../Contents/Index/Index';
+import AccountSuspended from '../Contents/AccountSuspended/AccountSuspended';
+import AuthRedirect from '../Contents/Auth/AuthRedirect/AuthRedirect';
 import AuthLogin from '../Contents/Auth/Login/Login';
 import AuthLogout from '../Contents/Auth/Logout/Logout';
-import AuthRedirect from '../Contents/Auth/AuthRedirect/AuthRedirect';
+import Index from '../Contents/Index/Index';
 import NotFound from '../Contents/NotFound/NotFound';
-import AccountSuspended from '../Contents/AccountSuspended/AccountSuspended';
 import Profile from '../Contents/Profile/Profile';
+import * as routes from './routes';
 
-const contentRouter = (props) => {
-  const authenticated = props.auth && props.auth.user && props.auth.user.uid;
+const contentRouter = ({ auth }) => {
+  const authenticated = auth && auth.user && auth.user.uid;
   const protectedRoutes = [
     <Route key={routes.MYPROFILE} path={routes.MYPROFILE} exact component={Profile} />,
   ];
@@ -26,6 +26,18 @@ const contentRouter = (props) => {
       <Route component={NotFound} />
     </Switch>
   );
+};
+
+contentRouter.propTypes = {
+  auth: PropTypes.shape({
+    user: PropTypes.shape({
+      uid: PropTypes.string,
+    }),
+  }),
+};
+
+contentRouter.defaultProps = {
+  auth: null,
 };
 
 export default contentRouter;
