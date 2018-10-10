@@ -16,7 +16,11 @@ describe('<Profile />', () => {
 
   beforeEach(() => {
     wrapper = shallow(<Profile
-      profile={{}}
+      profile={{
+        profile: {
+          profilePhoto: '',
+        },
+      }}
       auth={{}}
     />);
   });

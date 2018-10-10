@@ -9,8 +9,7 @@ import * as routes from './components/ContentRouter/routes';
 import Footer from './components/Footer/Footer';
 import MainContainer from './components/HOC/MainContainer/MainContainer';
 import ThemeProvider from './components/ThemeProvider/ThemeProvider';
-import * as userinfoMonitor from './firebase/userinfoMonitor';
-
+import userinfoMonitor from './firebase/userinfoMonitor';
 
 class App extends Component {
   componentWillMount() {

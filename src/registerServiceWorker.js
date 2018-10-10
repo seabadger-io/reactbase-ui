@@ -1,3 +1,5 @@
+/* eslint no-console: "off" */
+
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -56,6 +58,7 @@ function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      /* eslint no-param-reassign: "off" */
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
