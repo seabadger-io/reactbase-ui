@@ -59,19 +59,15 @@ class Profile extends Component {
 
   componentDidUpdate(prevProps) {
     const state = { ...this.state };
-    let profileHasChanges = false;
     const {
       profile: {
         profile,
         changeCompleted,
       },
     } = this.props;
-    for (const k of (Object.keys(profile))) {
-      if (prevProps.profile.profile[k] !== profile[k]) {
-        profileHasChanges = true;
-        if (profileHasChanges) break;
-      }
-    }
+    const profileHasChanges = Object.keys(profile)
+      .map(k => prevProps.profile.profile[k] !== profile[k])
+      .reduce((acc, cur) => acc && cur, true);
     if (profileHasChanges) {
       state.formValues = { ...profile };
     }
@@ -160,10 +156,10 @@ class Profile extends Component {
 
   validateForm(cb = () => {}) {
     const { formErrors, formValues } = this.state;
-    for (const field of Object.keys(this.formValidations)) {
+    Object.keys(this.formValidations).forEach((field) => {
       formErrors[field] = !inputIsValid(formValues[field],
         this.formValidations[field]);
-    }
+    });
     this.setState({ formErrors }, cb);
   }
 
