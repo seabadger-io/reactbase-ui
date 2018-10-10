@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 
 import Aux from '../../../HOC/Aux';
 import { auth, providers } from '../../../../firebase';
@@ -12,6 +13,10 @@ import * as routes from '../../../ContentRouter/routes';
 class Login extends React.Component {
   state = {
     error: null,
+  }
+
+  componentDidMount() {
+    this.startLogin();
   }
 
   startLogin = () => {
@@ -27,11 +32,17 @@ class Login extends React.Component {
 
   loginWasSuccessful = () => {
     this.setState({ error: null });
-    this.props.history.push(routes.AUTH_REDIRECT);
+    const {
+      history: {
+        push,
+      },
+    } = this.props;
+    push(routes.AUTH_REDIRECT);
   }
 
   loginFailed = (error) => {
-    // TODO: handle auth/account-exists-with-different-credential error code if multiple providers are implemented
+    // TODO: handle auth/account-exists-with-different-credential
+    //  error code if multiple providers are implemented
     let errorMsg;
     switch (error.code) {
       case 'auth/cancelled-popup-request':
@@ -47,28 +58,25 @@ class Login extends React.Component {
     this.setState({ error: errorMsg });
   }
 
-  componentDidMount() {
-    this.startLogin();
-  }
-
   render() {
+    const { error } = this.state;
     return (
       <Paper style={{ width: '100%', maxWidth: '560px', textAlign: 'center' }}>
         {
-          !this.state.error ? (
+          !error ? (
             <Aux>
               <Typography variant="body1" align="center">
                 Login in progress...
               </Typography>
               <Typography variant="caption" align="center">
-                Please make sure your browser doesn't block pop-ups
+                Please make sure your browser doesn&apos;t block pop-ups
               </Typography>
               <LinearProgress variant="query" style={{ margin: '15px' }} />
             </Aux>
           ) : (
             <Aux>
               <Typography variant="body1" align="center">
-                {this.state.error}
+                {error}
               </Typography>
               <Button
                 variant="contained"
@@ -85,5 +93,11 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Login;
