@@ -30,7 +30,7 @@ Footer.propTypes = {
   theme: PropTypes.shape({
     palette: PropTypes.shape({
       primary: PropTypes.shape({
-        color: PropTypes.string.isRequired,
+        contrastText: PropTypes.string.isRequired,
         main: PropTypes.string.isRequired,
       }),
     }),
