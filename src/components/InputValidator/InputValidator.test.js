@@ -83,5 +83,10 @@ describe('InputValidator', () => {
       const validators = { matches: /def/ };
       expect(isValid(input, validators)).toBe(false);
     });
+    it('should return true if matches "0"', () => {
+      const input = '0';
+      const validators = { matches: /0/ };
+      expect(isValid(input, validators)).toBe(true);
+    });
   });
 });
