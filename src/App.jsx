@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import ApplicationBar from './components/ApplicationBar/ApplicationBar';
+import ApplicationBar from './components/UI/ApplicationBar/ApplicationBar';
 import ContentRouter from './components/ContentRouter/ContentRouter';
 import * as routes from './components/ContentRouter/routes';
-import Footer from './components/Footer/Footer';
+import Footer from './components/UI/Footer/Footer';
 import MainContainer from './components/HOC/MainContainer/MainContainer';
-import SplashScreen from './components/SplashScreen/SplashScreen';
+import SplashScreen from './components/UI/SplashScreen/SplashScreen';
 import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 import userinfoMonitor from './firebase/userinfoMonitor';
 

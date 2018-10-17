@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import * as routes from '../ContentRouter/routes';
+import * as routes from '../../ContentRouter/routes';
 import UserMenu from './UserMenu/UserMenu';
 
 const ApplicationBar = ({ title, children }) => (

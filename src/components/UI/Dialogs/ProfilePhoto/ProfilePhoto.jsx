@@ -1,16 +1,14 @@
 /* eslint "react/no-did-update-set-state": "off" */
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
-import React, { Component } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 class ProfilePhoto extends Component {
   state = {

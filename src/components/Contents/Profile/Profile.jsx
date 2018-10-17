@@ -13,8 +13,8 @@ import { connect } from 'react-redux';
 import { red, green } from '@material-ui/core/colors';
 import PropTypes from 'prop-types';
 import * as actions from '../../../redux/actions';
-import ProfilePhotoDialog from '../../Dialogs/ProfilePhoto/ProfilePhoto';
-import UsernameChangeDialog from '../../Dialogs/UsernameChange/UsernameChange';
+import ProfilePhotoDialog from '../../UI/Dialogs/ProfilePhoto/ProfilePhoto';
+import UsernameChangeDialog from '../../UI/Dialogs/UsernameChange/UsernameChange';
 import { isValid as inputIsValid } from '../../InputValidator/InputValidator';
 import userIcon from './usericon';
 

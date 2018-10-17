@@ -11,8 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import * as routes from '../../ContentRouter/routes';
-import * as authActions from '../../../redux/actions/auth';
+import * as routes from '../../../ContentRouter/routes';
+import * as authActions from '../../../../redux/actions/auth';
 
 class UserMenu extends Component {
   menuId = 'appbar-usermenu';
