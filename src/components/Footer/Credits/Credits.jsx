@@ -8,7 +8,7 @@ const credits = () => (
     variant="body2"
     style={{ flexBasis: '100%' }}
   >
-      React Photo ©2018 SeaBadger.io
+    React Base ©2018 SeaBadger.io
   </Typography>
 );
 

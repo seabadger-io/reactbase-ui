@@ -37,7 +37,7 @@ class App extends Component {
     return (
       <ThemeProvider>
         <CssBaseline />
-        <ApplicationBar title="React Photo" />
+        <ApplicationBar title="React Base" />
         <MainContainer>
           {
             auth.hasLoaded
