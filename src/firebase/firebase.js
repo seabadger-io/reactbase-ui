@@ -11,6 +11,12 @@ const auth = firebase.auth();
 const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
 };
+
+// https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters
+providers.google.setCustomParameters({
+  prompt: 'select_account',
+});
+
 const db = firebase.firestore();
 db.settings({
   timestampsInSnapshots: true,
