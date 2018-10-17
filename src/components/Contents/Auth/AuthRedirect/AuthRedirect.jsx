@@ -19,7 +19,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 authRedirect.propTypes = {
-  continueUrl: PropTypes.string,
+  continueUrl: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }),
+  ]),
   setContinueUrl: PropTypes.func.isRequired,
 };
 
