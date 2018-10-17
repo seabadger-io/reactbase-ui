@@ -87,6 +87,28 @@ describe('auth reducer', () => {
     });
   });
 
+  it('should set continue URL to / on setContinueUrl(null)', () => {
+    const payload = { continueUrl: null };
+    expect(authReducer(undefined, {
+      type: actionTypes.AUTH_SET_CONTINUE_URL,
+      ...payload,
+    })).toEqual({
+      ...initialState,
+      continueUrl: '/',
+    });
+  });
+
+  it('should set continue URL to / on setContinueUrl()', () => {
+    const payload = { };
+    expect(authReducer(undefined, {
+      type: actionTypes.AUTH_SET_CONTINUE_URL,
+      ...payload,
+    })).toEqual({
+      ...initialState,
+      continueUrl: '/',
+    });
+  });
+
   it('should set user meta on userMetaUpdated', () => {
     const payload = { userMeta: 'usermeta' };
     expect(authReducer(undefined, {

@@ -3,7 +3,7 @@ import * as actionTypes from '../actions/actionTypes';
 export const initialState = {
   user: null,
   error: null,
-  continueUrl: null,
+  continueUrl: '/',
   userMeta: null,
   hasLoaded: false,
 };
@@ -35,7 +35,9 @@ const logout = state => ({
 
 const setContinueUrl = (state, action) => ({
   ...state,
-  continueUrl: action.continueUrl,
+  continueUrl: typeof action.continueUrl === 'undefined' || action.continueUrl === null
+    ? '/'
+    : action.continueUrl,
 });
 
 const userMetaUpdated = (state, action) => ({
