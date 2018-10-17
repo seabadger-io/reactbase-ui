@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 
 import Credits from './Credits/Credits';
 
-const Footer = (props) => {
-  const { theme } = props;
-
+const Footer = ({ title, theme }) => {
   const styles = {
     footer: {
       display: 'flex',
@@ -21,7 +19,7 @@ const Footer = (props) => {
 
   return (
     <Paper component="footer" style={styles.footer} elevation={1} square>
-      <Credits />
+      <Credits title={title} />
     </Paper>
   );
 };
@@ -35,6 +33,7 @@ Footer.propTypes = {
       }),
     }),
   }).isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default withTheme()(Footer);

@@ -28,7 +28,7 @@ const store = createStore(rootReducer, composeEnhancers(
 const app = (
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <App title="React Base" />
     </BrowserRouter>
   </Provider>
 );

@@ -29,6 +29,7 @@ class App extends Component {
 
   render() {
     const {
+      title,
       location,
       history,
       match,
@@ -37,7 +38,7 @@ class App extends Component {
     return (
       <ThemeProvider>
         <CssBaseline />
-        <ApplicationBar title="React Base" />
+        <ApplicationBar title={title} />
         <MainContainer>
           {
             auth.hasLoaded
@@ -48,10 +49,10 @@ class App extends Component {
                   match={match}
                   auth={auth}
                 />
-              ) : <SplashScreen />
+              ) : <SplashScreen title={title} />
           }
         </MainContainer>
-        <Footer />
+        <Footer title={title} />
       </ThemeProvider>
     );
   }
@@ -67,6 +68,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 App.propTypes = {
+  title: PropTypes.string.isRequired,
   startUserinfoMonitor: PropTypes.func.isRequired,
   userMeta: PropTypes.shape({
     isSuspended: PropTypes.bool,
